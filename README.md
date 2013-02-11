@@ -8,6 +8,7 @@ Description
 -----------
 
 When building location based android applications it’s always an added plus to include some form of routing so that the user can know how to navigate from place to place. In android, the SDK does not support routing out of the box. There are several approaches that can be taken to achieve this.  You can pass the start and destination points to a Google Maps intent or web view mechanisms. These approaches work well however they are a bit flawed, The user should not have to navigate from the app and the developer has no control once the user navigates to another app therefore  this implementation is best. This project utilizes a parser that translate the json received from the directions web service to bunch of geopoints that can be applied to the map control as a route overlay.
+
 <b>Copyright (C) by Joel Dean</b>
 
 Sample
