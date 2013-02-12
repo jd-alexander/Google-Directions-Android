@@ -69,7 +69,7 @@ Just clean the project.
 Contribution
 ------------
 
-Please fork [dev](https://github.com/jd-alexander/Google-Directions-Android/fork) repository and contribute back using [pull requests](https://github.com/jd-alexander/Google-Directions-Android/pull/new/master).
+Please fork  repository and contribute back using pull requests.
 
 Any contributions, large or small, major features, bug fixes, additional language translations, unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
 
