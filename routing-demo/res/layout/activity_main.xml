@@ -9,7 +9,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:clickable="true"
-    android:apiKey="0gzlGIQA7-EPB3r1gBa-DKjAFzBZfkEWtBqXCUg"
+    android:apiKey=""
+     // Create your own key: @see http://code.google.com/android/add-ons/google-apis/mapkey.html#getdebugfingerprint
      />
 
 </RelativeLayout>
