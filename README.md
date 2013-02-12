@@ -64,6 +64,7 @@ Just clean the project.
 
 *Ensure that the Google APIs version is included in your SDK and that all references and values are in your manifest.
 
+*The color is of type int, its not an actual color. Just type Color. and wait for the intellisense the to suggest the colors.
 
 Contribution
 ------------
