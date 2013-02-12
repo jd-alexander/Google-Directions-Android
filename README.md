@@ -59,7 +59,7 @@ new Routing(this,mapView,Color.GREEN).execute(new GeoPoint((int)(18.015365*1E6),
 
 Known Issues
 ------------
-*If after importing the project(s) you get an stating that no resource found that matches a given name. 
+*If after importing the project(s) you get an error stating that no resource was found that matches a given name. 
 Just clean the project.
 
 *Ensure that the Google APIs version is included in your SDK and that all references and values are in your manifest.
@@ -82,12 +82,6 @@ For Support
 
 email : jdeanjj1000@gmail.com
 website : www.joeldeandev.com
-
-
-
-
-
-
 
 
 
