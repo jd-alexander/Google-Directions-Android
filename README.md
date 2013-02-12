@@ -38,7 +38,7 @@ To calculate the route and display it on the map you will need to run an async t
 *You can execute the task with these parameters.
 
 ``` java
-new Routing(/*MapView*/,/*Color*/).execute(/*GeoPoint(start)*/,/*GeoPoint(destination)*/);
+new Routing(/*MapView*/,/*Color of line*/).execute(/*GeoPoint(start)*/,/*GeoPoint(destination)*/);
 ```
 
 actual code 
@@ -49,7 +49,7 @@ new Routing(mapView,Color.GREEN).execute(new GeoPoint((int)(18.015365*1E6),(int)
 *Use these parameters if you want a progress dialog to be displayed while the task is running. 
 
 ``` java
-new Routing(/*Context*/,/*MapView*/,/*Color*/).execute(/*GeoPoint(start)*/,/*GeoPoint(destination)*/);
+new Routing(/*Context*/,/*MapView*/,/*Color of line*/).execute(/*GeoPoint(start)*/,/*GeoPoint(destination)*/);
 ```
 
 actual code 
