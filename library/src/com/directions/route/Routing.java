@@ -15,53 +15,51 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 
-public class Routing extends AsyncTask<GeoPoint,Void,Route>
+public class Routing extends AsyncTask<LatLng,Void,Route>
 {
 	private ProgressDialog spinner;
 	private Context context;
-	private MapView map;
+	private GoogleMap map;
 	private int color;
 	private Boolean check=false;
 
-	public Routing(Context context,MapView map,int color)
+	public Routing(Context context,GoogleMap map,int color)
 	{
 		
 		this.context = context;
 		this.map = map;
 		this.color = color;
 	}
-	public Routing(MapView map,int color)
+	public Routing(GoogleMap map,int color)
 	{
 		this.map = map;
 		this.color = color;
 		check=true;
 	}
 	@Override
-	protected Route doInBackground(GeoPoint... points) {
-		GeoPoint start = points[0];
-		GeoPoint dest = points[1];
+	protected Route doInBackground(LatLng... points) {
+        LatLng start = points[0];
+        LatLng dest = points[1];
 		Parser parser;
 	    String jsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
 	    final StringBuffer sBuf = new StringBuffer(jsonURL);
 	    sBuf.append("origin=");
-	    sBuf.append(start.getLatitudeE6()/1E6);
+	    sBuf.append(start.latitude);
 	    sBuf.append(',');
-	    sBuf.append(start.getLongitudeE6()/1E6);
+	    sBuf.append(start.longitude);
 	    sBuf.append("&destination=");
-	    sBuf.append(dest.getLatitudeE6()/1E6);
+	    sBuf.append(dest.latitude);
 	    sBuf.append(',');
-	    sBuf.append(dest.getLongitudeE6()/1E6);
-	    sBuf.append("&sensor=true&mode=driving");
+	    sBuf.append(dest.longitude);
+	    sBuf.append("&sensor=true&mode=walking");
 	    parser = new GoogleParser(sBuf.toString());
 	    Route r =  parser.parse();
 	    return r;
-
-	    
-
 	}
 	@Override
 	protected synchronized void onPreExecute() 
@@ -81,9 +79,16 @@ public class Routing extends AsyncTask<GeoPoint,Void,Route>
         }
         else
         {
-        	RouteOverlay routeOverlay = new RouteOverlay(result,color);
-    		map.getOverlays().add(routeOverlay);
-    		map.invalidate();
+
+            PolylineOptions options = new PolylineOptions().color(Color.BLUE).width(5);
+
+            for (LatLng point : result.getPoints()) {
+                options.add(point);
+            }
+
+            map.addPolyline(options);
+
+            // invalidate?
         }
      }//end onPostExecute method
 	

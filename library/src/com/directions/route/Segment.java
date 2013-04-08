@@ -1,10 +1,11 @@
 package com.directions.route;
 //by Haseem Saheed
-import com.google.android.maps.GeoPoint;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class Segment {
     /** Points in this segment. **/
-    private GeoPoint start;
+    private LatLng start;
     /** Turn instruction to reach next segment. **/
     private String instruction;
     /** Length of segment. **/
@@ -43,7 +44,7 @@ public class Segment {
      * @param point GeoPoint to add.
      */
 
-    public void setPoint(final GeoPoint point) {
+    public void setPoint(final LatLng point) {
             start = point;
     }
 
@@ -52,7 +53,7 @@ public class Segment {
      * @return a GeoPoint
      */
 
-    public GeoPoint startPoint() {
+    public LatLng startPoint() {
             return start;
     }
 
