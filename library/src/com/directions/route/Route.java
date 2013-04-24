@@ -1,13 +1,14 @@
 package com.directions.route;
 //by Haseem Saheed
+
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.maps.GeoPoint;
-
 public class Route {
     private String name;
-    private final List<GeoPoint> points;
+    private final List<LatLng> points;
     private List<Segment> segments;
     private String copyright;
     private String warning;
@@ -16,19 +17,19 @@ public class Route {
     private String polyline;
 
     public Route() {
-            points = new ArrayList<GeoPoint>();
+            points = new ArrayList<LatLng>();
             segments = new ArrayList<Segment>();
     }
 
-    public void addPoint(final GeoPoint p) {
+    public void addPoint(final LatLng p) {
             points.add(p);
     }
 
-    public void addPoints(final List<GeoPoint> points) {
+    public void addPoints(final List<LatLng> points) {
             this.points.addAll(points);
     }
 
-    public List<GeoPoint> getPoints() {
+    public List<LatLng> getPoints() {
             return points;
     }
 
