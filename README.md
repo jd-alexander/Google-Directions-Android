@@ -1,8 +1,4 @@
-This is my attempt at making the library compatible with Google Maps API v2.
-I have removed the demo from my source tree as I have no time to fix it.
-All credits go to Alexander of course. :-)
 
-- Original readme -
 
 Google-Directions-Android
 =========================
