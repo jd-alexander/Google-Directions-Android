@@ -1,5 +1,4 @@
 
-
 Google-Directions-Android
 =========================
 
@@ -51,12 +50,12 @@ new Routing(mapView,Color.GREEN).execute(new GeoPoint((int)(18.015365*1E6),(int)
 *Use these parameters if you want a progress dialog to be displayed while the task is running. 
 
 ``` java
-new Routing(/*Context*/,/*MapView*/,/*Color of line*/).execute(/*GeoPoint(start)*/,/*GeoPoint(destination)*/);
+new Routing(/*Context*/,/*MapView*/,/*Color of line*/).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
 ```
 
 actual code 
 ``` java
-new Routing(this,mapView,Color.GREEN).execute(new GeoPoint((int)(18.015365*1E6),(int)(-77.499382*1E6)), new GeoPoint((int)(18.012590*1E6),(int)(-77.500659*1E6)));
+new Routing(this,mapView,Color.GREEN).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
 ```
 
 Known Issues
