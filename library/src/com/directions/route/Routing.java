@@ -22,6 +22,9 @@ import com.google.android.gms.maps.model.*;
 
 public class Routing extends AsyncTask<LatLng,Void,Route>
 {
+    /**
+     * Start enum that stores the location of the different pushpin drawables.
+     */
     public enum Start
     {
         RED(R.drawable.start_red),
@@ -38,6 +41,9 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
         }
     }
 
+    /**
+     * Destination enum that stores the location of the different pushpin drawables.
+     */
     public enum Destination
     {
         RED(R.drawable.end_red),
@@ -69,7 +75,12 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
     private Marker destination;
 
 
-
+    /**
+     * Initializes the context needed for the progress dialog, the map, and the color of the route.
+     * @param context
+     * @param map
+     * @param color
+     */
 	public Routing(Context context,GoogleMap map,int color)
 	{
 		
@@ -78,6 +89,15 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
 		this.color = color;
 	}
 
+    /**
+     * Initializes the context needed for the progress dialog, the map, the color of the route,starting marker color
+     * and the destination marker color.
+     * @param context
+     * @param map
+     * @param color
+     * @param startColor
+     * @param destinationColor
+     */
     public Routing(Context context,GoogleMap map,int color,Start startColor,Destination destinationColor)
     {
 
@@ -89,6 +109,14 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
         pushPins = true;
     }
 
+    /**
+     * Initializes the  the map, the color of the route,starting marker color
+     * and the destination marker color.
+     * @param map
+     * @param color
+     * @param startColor
+     * @param destinationColor
+     */
     public Routing(GoogleMap map,int color,Start startColor,Destination destinationColor)
     {
         this.map = map;
@@ -97,6 +125,12 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
         this.destinationColor = destinationColor;
         pushPins = true;
     }
+
+    /**
+     * Initializes the map and the color of the route.
+     * @param map
+     * @param color
+     */
 	public Routing(GoogleMap map,int color)
 	{
 		this.map = map;
@@ -104,7 +138,12 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
 		check=true;
 	}
 
-
+    /**
+     * Performs the call to the google maps API to acquie routing data and deserializes it to
+     * a format the map can display.
+     * @param points
+     * @return
+     */
 	@Override
 	protected Route doInBackground(LatLng... points) {
         LatLng start = points[0];
@@ -139,7 +178,7 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
 		
         if(result==null)
         {
-        	Log.e(null,"No result");
+        	Log.e("Routing","No result was returned.");
         }
         else
         {
@@ -153,7 +192,9 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
             destinationPoint = result.getPoints().get(result.getPoints().size()-1);
 
 
-
+            /**
+             * Checks to see if the constructors that supply the start and destination pushpin colors have being initialized.
+             */
             if(pushPins)
             {
                 start = map.addMarker(new MarkerOptions()
@@ -165,7 +206,7 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
                 );
             }
             map.addPolyline(options);
-            // invalidate?
+
         }
      }//end onPostExecute method
 

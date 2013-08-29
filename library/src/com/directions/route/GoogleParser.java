@@ -80,7 +80,7 @@ public class GoogleParser extends XMLParser implements Parser {
                             route.addSegment(segment.copy());
                     }
             } catch (JSONException e) {
-                    Log.e(e.getMessage(), "Google JSON Parser - " + feedUrl);
+                Log.e("Routing Error",e.getMessage());
             }
             return route;
     }
@@ -101,12 +101,12 @@ public class GoogleParser extends XMLParser implements Parser {
             sBuf.append(line);
         }
     } catch (IOException e) {
-            Log.e(e.getMessage(), "Google parser, stream2string");
+        Log.e("Routing Error",e.getMessage());
     } finally {
         try {
             input.close();
         } catch (IOException e) {
-            Log.e(e.getMessage(), "Google parser, stream2string");
+            Log.e("Routing Error",e.getMessage());
         }
     }
     return sBuf.toString();
