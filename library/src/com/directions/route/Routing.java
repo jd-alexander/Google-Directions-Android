@@ -15,18 +15,60 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.directions.api.R;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.*;
 
 
 public class Routing extends AsyncTask<LatLng,Void,Route>
 {
+    public enum Start
+    {
+        RED(R.drawable.start_red),
+        BLUE(R.drawable.start_blue),
+        ORANGE(R.drawable.start_orange),
+        PURPLE(R.drawable.start_purple),
+        GREEN(R.drawable.start_green);
+
+
+        private final int color;
+        Start(int color)
+        {
+            this.color = color;
+        }
+    }
+
+    public enum Destination
+    {
+        RED(R.drawable.end_red),
+        BLUE(R.drawable.end_blue),
+        ORANGE(R.drawable.end_orange),
+        PURPLE(R.drawable.end_purple),
+        GREEN(R.drawable.end_green);
+
+
+        private final int color;
+        Destination(int color)
+        {
+            this.color = color;
+        }
+
+    }
+
 	private ProgressDialog spinner;
 	private Context context;
 	private GoogleMap map;
 	private int color;
 	private Boolean check=false;
+    private Boolean pushPins=false;
+    private Start startColor;
+    private Destination destinationColor;
+    private LatLng startPoint;
+    private LatLng destinationPoint;
+    private Marker start;
+    private Marker destination;
+
+
 
 	public Routing(Context context,GoogleMap map,int color)
 	{
@@ -35,12 +77,34 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
 		this.map = map;
 		this.color = color;
 	}
+
+    public Routing(Context context,GoogleMap map,int color,Start startColor,Destination destinationColor)
+    {
+
+        this.context = context;
+        this.map = map;
+        this.color = color;
+        this.startColor = startColor;
+        this.destinationColor = destinationColor;
+        pushPins = true;
+    }
+
+    public Routing(GoogleMap map,int color,Start startColor,Destination destinationColor)
+    {
+        this.map = map;
+        this.color = color;
+        this.startColor = startColor;
+        this.destinationColor = destinationColor;
+        pushPins = true;
+    }
 	public Routing(GoogleMap map,int color)
 	{
 		this.map = map;
 		this.color = color;
 		check=true;
 	}
+
+
 	@Override
 	protected Route doInBackground(LatLng... points) {
         LatLng start = points[0];
@@ -80,18 +144,32 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
         else
         {
 
-            PolylineOptions options = new PolylineOptions().color(Color.BLUE).width(5);
+            PolylineOptions options = new PolylineOptions().color(color).width(5);
 
             for (LatLng point : result.getPoints()) {
                 options.add(point);
             }
+            startPoint = result.getPoints().get(0);
+            destinationPoint = result.getPoints().get(result.getPoints().size()-1);
 
+
+
+            if(pushPins)
+            {
+                start = map.addMarker(new MarkerOptions()
+                        .position(startPoint).icon(BitmapDescriptorFactory.fromResource(startColor.color))
+                );
+
+                destination = map.addMarker(new MarkerOptions()
+                        .position(destinationPoint).icon(BitmapDescriptorFactory.fromResource(destinationColor.color))
+                );
+            }
             map.addPolyline(options);
-
             // invalidate?
         }
      }//end onPostExecute method
-	
+
+
 	
 	
 }
