@@ -25,7 +25,9 @@ Installation
 The sample project requires:
 
 * The library project
-* Google Maps API and all other Android dependencies installed on your development machine.
+* Google Play services SDK (bundled with project)
+* android-support-v4-jar (bundled with project)
+* Android dependencies installed on your development machine.
 
 Usage
 -----
@@ -33,7 +35,12 @@ Usage
 Google Directions Android(the library folder) is presented as an [Android library project](http://developer.android.com/guide/developing/projects/projects-eclipse.html).
 You can include this project by [referencing it as a library project](http://developer.android.com/guide/developing/projects/projects-eclipse.html#ReferencingLibraryProject) in Eclipse or ant.
 
+For the library project a reference has to be done to the Google Play Services Lib project that contains the Google Maps Android API v2 dependencies.
+
 To calculate the route and display it on the map you will need to run an async task that is present in the library.
+
+N.B  Ensure that the google play servicers jar is attached to the Google Play Services lib project.
+
 
 *You can execute the task with these parameters.
 
@@ -57,12 +64,25 @@ actual code
 new Routing(this,mapView,Color.GREEN).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
 ```
 
+
+*NEW!!! Add a start and destination pushpin to the map using five different colors.Use these parameters if you want a progress dialog to be displayed while the task is running. 
+
+``` java
+new Routing(/*Context*/,/*MapView*/,/*Color of line*/,/*Pushpin color enum*/,/*Pushpin color enum*/ ).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
+```
+
+actual code 
+``` java
+new Routing(this,mapView,Color.GREEN,Routing.Start.BLUE, Routing.Destination.ORANGE).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
+```
 Known Issues
 ------------
 *If after importing the project(s) you get an error stating that no resource was found that matches a given name,
 just clean the project.
 
-*Ensure that the Google APIs version is included in your SDK and that all references and values are in your manifest.
+*Ensure that the Google Play Services SDK is attached to the libary project and that all references and values are in your manifest.
+
+*For the example project it needs android-support-v4-jar due to use of the elements from the support library.
 
 *The color is of type int, its not an actual color. Just type Color. and wait for the intellisense the to suggest the colors.
 
