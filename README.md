@@ -65,7 +65,9 @@ new Routing(this,mapView,Color.GREEN).execute(new LatLng(18.015365,-77.499382), 
 ```
 
 
-*NEW!!! Add a start and destination pushpin to the map using five different colors.Use these parameters if you want a progress dialog to be displayed while the task is running. 
+NEW!!!
+------------
+*Add a start and destination pushpin to the map using five different colors.Use these parameters if you want a progress dialog to be displayed while the task is running. 
 
 ``` java
 new Routing(/*Context*/,/*MapView*/,/*Color of line*/,/*Pushpin color enum*/,/*Pushpin color enum*/ ).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
