@@ -188,8 +188,8 @@ public class Routing extends AsyncTask<LatLng,Void,Route>
             for (LatLng point : result.getPoints()) {
                 options.add(point);
             }
-            startPoint = result.getPoints().get(0);
-            destinationPoint = result.getPoints().get(result.getPoints().size()-1);
+            startPoint = result.getPoints().get(2);
+            destinationPoint = result.getPoints().get(result.getPoints().size()-3);
 
 
             /**
