@@ -86,12 +86,14 @@ just clean the project.
 
 *For the example project it needs android-support-v4-jar due to use of the elements from the support library.
 
+*If the route is not being displayed then type "Routing" in your log cat to see the potential error messages from the library.
+
 *The color is of type int, its not an actual color. Just type Color. and wait for the intellisense the to suggest the colors.
 
 Contribution
 ------------
 
-Please fork  repository and contribute back using pull requests.
+Please fork  repository and contribute using pull requests.
 
 Any contributions, large or small, major features, bug fixes, additional language translations, unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
 
