@@ -100,6 +100,7 @@ Any contributions, large or small, major features, bug fixes, additional languag
 Developed By
 ------------
 * Joel Dean 
+* Hesham Saeed
 
 For Support
 ------------
