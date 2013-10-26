@@ -102,12 +102,5 @@ Developed By
 * Joel Dean 
 * Hesham Saeed
 
-For Support
-------------
-
-email : jdeanjj1000@gmail.com
-website : www.joeldeandev.com
-
-
 
 [1]:http://i41.tinypic.com/2dw97r7.jpg
