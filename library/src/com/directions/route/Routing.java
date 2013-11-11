@@ -64,6 +64,10 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
    */
 	@Override
 	protected Route doInBackground(LatLng... aPoints) {
+	  for (LatLng mPoint : aPoints) {
+	    if (mPoint == null) return null;
+	  }
+
     return new GoogleParser(constructURL(aPoints)).parse();
 	}
 
@@ -96,9 +100,7 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
 	{		
     if(result==null) {
       dispatchOnFailure();
-    }
-    else
-    {
+    } else {
       PolylineOptions mOptions = new PolylineOptions();
 
       for (LatLng point : result.getPoints()) {
