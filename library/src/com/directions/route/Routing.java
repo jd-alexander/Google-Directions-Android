@@ -21,6 +21,22 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
 {
   protected Context _mContext;
   protected ArrayList<RoutingListener> _aListeners;
+  protected TravelMode _mTravelMode;
+
+  public enum TravelMode {
+    BIKING("biking"),
+    DRIVING("driving"),
+    WALKING("walking"),
+    TRANSIT("transit");
+
+    protected String _sValue;
+
+    private TravelMode(String sValue) {
+            this._sValue = sValue;
+    }
+
+    protected String getValue() { return _sValue; }
+  }
 
 
   /**
@@ -28,10 +44,11 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
    *   color of the route.
    * @param context
    */
-	public Routing(Context mContext)
+	public Routing(Context mContext, TravelMode mTravelMode)
 	{
 		this._mContext = mContext;
     this._aListeners = new ArrayList<RoutingListener>();
+    this._mTravelMode = mTravelMode;
 	}
 
   public void registerListener(RoutingListener mListener) {
@@ -85,7 +102,8 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
     mBuf.append(dest.latitude);
     mBuf.append(',');
     mBuf.append(dest.longitude);
-    mBuf.append("&sensor=true&mode=walking");
+    mBuf.append("&sensor=true&mode=");
+    mBuf.append(_mTravelMode.getValue());
 
     return mBuf.toString();
 	}
