@@ -30,6 +30,8 @@ public class GoogleParser extends XMLParser implements Parser {
     public Route parse() {
             // turn the stream into a string
             final String result = convertStreamToString(this.getInputStream());
+            if (result == null) return null;
+
             //Create an empty route
             final Route route = new Route();
             //Create an empty segment
@@ -81,6 +83,7 @@ public class GoogleParser extends XMLParser implements Parser {
                     }
             } catch (JSONException e) {
                 Log.e("Routing Error",e.getMessage());
+                return null;
             }
             return route;
     }
@@ -92,6 +95,8 @@ public class GoogleParser extends XMLParser implements Parser {
      */
 
     private static String convertStreamToString(final InputStream input) {
+    if (input == null) return null;
+
     final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
     final StringBuilder sBuf = new StringBuilder();
 

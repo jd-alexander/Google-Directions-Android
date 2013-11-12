@@ -8,209 +8,124 @@ package com.directions.route;
  * 
  */
 
+import java.util.ArrayList;
 
-import android.app.ProgressDialog;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
-
-import com.directions.api.R;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.*;
 
 
-public class Routing extends AsyncTask<LatLng,Void,Route>
+public class Routing extends AsyncTask<LatLng, Void, Route>
 {
-    /**
-     * Start enum that stores the location of the different pushpin drawables.
-     */
-    public enum Start
-    {
-        RED(R.drawable.start_red),
-        BLUE(R.drawable.start_blue),
-        ORANGE(R.drawable.start_orange),
-        PURPLE(R.drawable.start_purple),
-        GREEN(R.drawable.start_green);
+  protected Context _mContext;
+  protected ArrayList<RoutingListener> _aListeners;
+  protected TravelMode _mTravelMode;
 
+  public enum TravelMode {
+    BIKING("biking"),
+    DRIVING("driving"),
+    WALKING("walking"),
+    TRANSIT("transit");
 
-        private final int color;
-        Start(int color)
-        {
-            this.color = color;
-        }
+    protected String _sValue;
+
+    private TravelMode(String sValue) {
+            this._sValue = sValue;
     }
 
-    /**
-     * Destination enum that stores the location of the different pushpin drawables.
-     */
-    public enum Destination
-    {
-        RED(R.drawable.end_red),
-        BLUE(R.drawable.end_blue),
-        ORANGE(R.drawable.end_orange),
-        PURPLE(R.drawable.end_purple),
-        GREEN(R.drawable.end_green);
+    protected String getValue() { return _sValue; }
+  }
 
 
-        private final int color;
-        Destination(int color)
-        {
-            this.color = color;
-        }
-
-    }
-
-    private ProgressDialog spinner;
-    private Context context;
-    private GoogleMap map;
-    private int color;
-    private Boolean check=false;
-    private Boolean pushPins=false;
-    private Start startColor;
-    private Destination destinationColor;
-    private LatLng startPoint;
-    private LatLng destinationPoint;
-    private Marker start;
-    private Marker destination;
-
-
-    /**
-     * Initializes the context needed for the progress dialog, the map, and the color of the route.
-     * @param context
-     * @param map
-     * @param color
-     */
-	public Routing(Context context,GoogleMap map,int color)
+  /**
+   * Initializes the context needed for the progress dialog, the map, and the
+   *   color of the route.
+   * @param context
+   */
+	public Routing(Context mContext, TravelMode mTravelMode)
 	{
-		
-		this.context = context;
-		this.map = map;
-		this.color = color;
+		this._mContext = mContext;
+    this._aListeners = new ArrayList<RoutingListener>();
+    this._mTravelMode = mTravelMode;
 	}
 
-    /**
-     * Initializes the context needed for the progress dialog, the map, the color of the route,starting marker color
-     * and the destination marker color.
-     * @param context
-     * @param map
-     * @param color
-     * @param startColor
-     * @param destinationColor
-     */
-    public Routing(Context context,GoogleMap map,int color,Start startColor,Destination destinationColor)
-    {
+  public void registerListener(RoutingListener mListener) {
+    _aListeners.add(mListener);
+  }
 
-        this.context = context;
-        this.map = map;
-        this.color = color;
-        this.startColor = startColor;
-        this.destinationColor = destinationColor;
-        pushPins = true;
+  protected void dispatchOnStart() {
+    for (RoutingListener mListener: _aListeners) {
+      mListener.onStart();
     }
+  }
 
-    /**
-     * Initializes the  the map, the color of the route,starting marker color
-     * and the destination marker color.
-     * @param map
-     * @param color
-     * @param startColor
-     * @param destinationColor
-     */
-    public Routing(GoogleMap map,int color,Start startColor,Destination destinationColor)
-    {
-        this.map = map;
-        this.color = color;
-        this.startColor = startColor;
-        this.destinationColor = destinationColor;
-        pushPins = true;
+  protected void dispatchOnFailure() {
+    for (RoutingListener mListener: _aListeners) {
+      mListener.onFailure();
     }
+  }
 
-    /**
-     * Initializes the map and the color of the route.
-     * @param map
-     * @param color
-     */
-	public Routing(GoogleMap map,int color)
-	{
-		this.map = map;
-		this.color = color;
-		check=true;
+  protected void dispatchOnSuccess(PolylineOptions mOptions) {
+    for (RoutingListener mListener: _aListeners) {
+      mListener.onSuccess(mOptions);
+    }
+  }
+
+  /**
+   * Performs the call to the google maps API to acquire routing data and 
+   *   deserializes it to a format the map can display.
+   * @param points
+   * @return
+   */
+	@Override
+	protected Route doInBackground(LatLng... aPoints) {
+	  for (LatLng mPoint : aPoints) {
+	    if (mPoint == null) return null;
+	  }
+
+    return new GoogleParser(constructURL(aPoints)).parse();
 	}
 
-    /**
-     * Performs the call to the google maps API to acquie routing data and deserializes it to
-     * a format the map can display.
-     * @param points
-     * @return
-     */
-	@Override
-	protected Route doInBackground(LatLng... points) {
-        LatLng start = points[0];
-        LatLng dest = points[1];
-		Parser parser;
-	    String jsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
-	    final StringBuffer sBuf = new StringBuffer(jsonURL);
-	    sBuf.append("origin=");
-	    sBuf.append(start.latitude);
-	    sBuf.append(',');
-	    sBuf.append(start.longitude);
-	    sBuf.append("&destination=");
-	    sBuf.append(dest.latitude);
-	    sBuf.append(',');
-	    sBuf.append(dest.longitude);
-	    sBuf.append("&sensor=true&mode=walking");
-	    parser = new GoogleParser(sBuf.toString());
-	    Route r =  parser.parse();
-	    return r;
+	protected String constructURL(LatLng... points) {
+    LatLng start = points[0];
+    LatLng dest = points[1];
+    String sJsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
+
+    final StringBuffer mBuf = new StringBuffer(sJsonURL);
+    mBuf.append("origin=");
+    mBuf.append(start.latitude);
+    mBuf.append(',');
+    mBuf.append(start.longitude);
+    mBuf.append("&destination=");
+    mBuf.append(dest.latitude);
+    mBuf.append(',');
+    mBuf.append(dest.longitude);
+    mBuf.append("&sensor=true&mode=");
+    mBuf.append(_mTravelMode.getValue());
+
+    return mBuf.toString();
 	}
+
 	@Override
-	protected synchronized void onPreExecute() 
-	{ 
-		if(!check)
-		spinner = ProgressDialog.show(context,"","Loading...", true,false);
-	}//end onPreExecute method
-	
+	protected void onPreExecute() {
+	  dispatchOnStart();
+	}
+
+	@Override
 	protected void onPostExecute(Route result) 
-	{
-		if(!check)
-		spinner.dismiss();
-		
-        if(result==null)
-        {
-        	Log.e("Routing","No result was returned.");
-        }
-        else
-        {
+	{		
+    if(result==null) {
+      dispatchOnFailure();
+    } else {
+      PolylineOptions mOptions = new PolylineOptions();
 
-            PolylineOptions options = new PolylineOptions().color(color).width(5);
+      for (LatLng point : result.getPoints()) {
+        mOptions.add(point);
+      }
 
-            for (LatLng point : result.getPoints()) {
-                options.add(point);
-            }
-            startPoint = result.getPoints().get(2);
-            destinationPoint = result.getPoints().get(result.getPoints().size()-3);
-
-
-            /**
-             * Checks to see if the constructors that supply the start and destination pushpin colors have being initialized.
-             */
-            if(pushPins)
-            {
-                start = map.addMarker(new MarkerOptions()
-                        .position(startPoint).icon(BitmapDescriptorFactory.fromResource(startColor.color))
-                );
-
-                destination = map.addMarker(new MarkerOptions()
-                        .position(destinationPoint).icon(BitmapDescriptorFactory.fromResource(destinationColor.color))
-                );
-            }
-            map.addPolyline(options);
-
-        }
-     }//end onPostExecute method
-
-
-	
-	
+      dispatchOnSuccess(mOptions);
+    }
+  }//end onPostExecute method	
 }
