@@ -57,19 +57,19 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
 
   protected void dispatchOnStart() {
     for (RoutingListener mListener: _aListeners) {
-      mListener.onStart();
+      mListener.onRoutingStart();
     }
   }
 
   protected void dispatchOnFailure() {
     for (RoutingListener mListener: _aListeners) {
-      mListener.onFailure();
+      mListener.onRoutingFailure();
     }
   }
 
   protected void dispatchOnSuccess(PolylineOptions mOptions) {
     for (RoutingListener mListener: _aListeners) {
-      mListener.onSuccess(mOptions);
+      mListener.onRoutingSuccess(mOptions);
     }
   }
 
