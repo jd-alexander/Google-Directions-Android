@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.directions.android.R;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.google.android.gms.maps.CameraUpdate;
@@ -16,7 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class MyActivity extends FragmentActivity implements RoutingListener {
+public class MyActivity extends FragmentActivity implements RoutingListener
+{
     protected GoogleMap map;
     protected LatLng start;
     protected LatLng end;
@@ -39,7 +39,7 @@ public class MyActivity extends FragmentActivity implements RoutingListener {
         start = new LatLng(18.015365, -77.499382);
         end = new LatLng(18.012590, -77.500659);
 
-        Routing routing = new Routing(getApplicationContext(), Routing.TravelMode.WALKING);
+        Routing routing = new Routing(Routing.TravelMode.WALKING);
         routing.registerListener(this);
         routing.execute(start, end);
     }

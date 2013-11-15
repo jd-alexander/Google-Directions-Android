@@ -8,18 +8,16 @@ package com.directions.route;
  * 
  */
 
-import java.util.ArrayList;
+import android.os.AsyncTask;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import java.util.ArrayList;
 
 
 public class Routing extends AsyncTask<LatLng, Void, Route>
 {
-  protected Context _mContext;
   protected ArrayList<RoutingListener> _aListeners;
   protected TravelMode _mTravelMode;
 
@@ -39,16 +37,10 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
   }
 
 
-  /**
-   * Initializes the context needed for the progress dialog, the map, and the
-   *   color of the route.
-   * @param context
-   */
-	public Routing(Context mContext, TravelMode mTravelMode)
+	public Routing(TravelMode mTravelMode)
 	{
-		this._mContext = mContext;
-    this._aListeners = new ArrayList<RoutingListener>();
-    this._mTravelMode = mTravelMode;
+        this._aListeners = new ArrayList<RoutingListener>();
+        this._mTravelMode = mTravelMode;
 	}
 
   public void registerListener(RoutingListener mListener) {
@@ -67,8 +59,10 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
     }
   }
 
-  protected void dispatchOnSuccess(PolylineOptions mOptions) {
-    for (RoutingListener mListener: _aListeners) {
+  protected void dispatchOnSuccess(PolylineOptions mOptions)
+  {
+    for (RoutingListener mListener: _aListeners)
+    {
       mListener.onRoutingSuccess(mOptions);
     }
   }
@@ -76,36 +70,39 @@ public class Routing extends AsyncTask<LatLng, Void, Route>
   /**
    * Performs the call to the google maps API to acquire routing data and 
    *   deserializes it to a format the map can display.
-   * @param points
+   * @param aPoints
    * @return
    */
 	@Override
-	protected Route doInBackground(LatLng... aPoints) {
-	  for (LatLng mPoint : aPoints) {
+	protected Route doInBackground(LatLng... aPoints)
+    {
+	  for (LatLng mPoint : aPoints)
+      {
 	    if (mPoint == null) return null;
 	  }
 
     return new GoogleParser(constructURL(aPoints)).parse();
 	}
 
-	protected String constructURL(LatLng... points) {
-    LatLng start = points[0];
-    LatLng dest = points[1];
-    String sJsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
+	protected String constructURL(LatLng... points)
+    {
+        LatLng start = points[0];
+        LatLng dest = points[1];
+        String sJsonURL = "http://maps.googleapis.com/maps/api/directions/json?";
 
-    final StringBuffer mBuf = new StringBuffer(sJsonURL);
-    mBuf.append("origin=");
-    mBuf.append(start.latitude);
-    mBuf.append(',');
-    mBuf.append(start.longitude);
-    mBuf.append("&destination=");
-    mBuf.append(dest.latitude);
-    mBuf.append(',');
-    mBuf.append(dest.longitude);
-    mBuf.append("&sensor=true&mode=");
-    mBuf.append(_mTravelMode.getValue());
+        final StringBuffer mBuf = new StringBuffer(sJsonURL);
+        mBuf.append("origin=");
+        mBuf.append(start.latitude);
+        mBuf.append(',');
+        mBuf.append(start.longitude);
+        mBuf.append("&destination=");
+        mBuf.append(dest.latitude);
+        mBuf.append(',');
+        mBuf.append(dest.longitude);
+        mBuf.append("&sensor=true&mode=");
+        mBuf.append(_mTravelMode.getValue());
 
-    return mBuf.toString();
+        return mBuf.toString();
 	}
 
 	@Override
