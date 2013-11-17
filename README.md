@@ -70,7 +70,7 @@ actual code
 ```
 
 *The library is bundled with start and end pushpins of various colours, check the example included or just have a look in the res folder.
-``
+
 Known Issues
 ------------
 *If after importing the project(s) you get an error stating that no resource was found that matches a given name,
