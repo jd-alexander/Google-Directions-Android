@@ -4,13 +4,6 @@ Google-Directions-Android
 This project allows you to  calculate the direction between two locations and display the route on a map based on the 
 classes created by Hesham Saeed in this [post](http://stackoverflow.com/questions/11745314/why-retrieving-google-directions-for-android-using-kml-data-is-not-working-anymo/11745316#11745316).
 
-Description
------------
-
-When building location based android applications it’s always an added plus to include some form of routing so that the user can know how to navigate from place to place. In android, the SDK does not support routing out of the box. There are several approaches that can be taken to achieve this.  You can pass the start and destination points to a Google Maps intent or web view mechanisms. These approaches work well however they are a bit flawed, The user should not have to navigate from the app and the developer has no control once the user navigates to another app therefore  this implementation is best. This project utilizes a parser that translate the json received from the directions web service to bunch of geopoints that can be applied to the map control as a route overlay.
-
-<b>Copyright (C) by Joel Dean</b>
-
 Sample
 ------
 
@@ -42,41 +35,42 @@ To calculate the route and display it on the map you will need to run an async t
 N.B  Ensure that the google play servicers jar is attached to the Google Play Services lib project.
 
 
-*You can execute the task with these parameters.
+*You can execute the task in this manner. ( See the example for more details on the exact implementation)
+
+
 
 ``` java
-new Routing(/*MapView*/,/*Color of line*/).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
+
+        Routing routing = new Routing(/* Travel Mode */);
+        routing.registerListener(/* Listener that delivers routing results.*/);
+        routing.execute(/*LatLng(start)*/, /*LatLng(destination)*/);
+        
 ```
 
 actual code 
 ``` java
-new Routing(mapView,Color.GREEN).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
+        start = new LatLng(18.015365, -77.499382);
+        end = new LatLng(18.012590, -77.500659);
+        
+        Routing routing = new Routing(Routing.TravelMode.WALKING);
+        routing.registerListener(this);
+        routing.execute(start, end);
+        
+        .....
+        
+      @Override
+      public void onRoutingSuccess(PolylineOptions mPolyOptions) 
+      {
+        PolylineOptions polyoptions = new PolylineOptions();
+        polyoptions.color(Color.BLUE);
+        polyoptions.width(10);
+        polyoptions.addAll(mPolyOptions.getPoints());
+        map.addPolyline(polyoptions);
+      }
 ```
 
-*Use these parameters if you want a progress dialog to be displayed while the task is running. 
-
-``` java
-new Routing(/*Context*/,/*MapView*/,/*Color of line*/).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
-```
-
-actual code 
-``` java
-new Routing(this,mapView,Color.GREEN).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
-```
-
-
-NEW!!!
-------------
-*Add a start and destination pushpin to the map using five different colors.Use these parameters if you want a progress dialog to be displayed while the task is running. 
-
-``` java
-new Routing(/*Context*/,/*MapView*/,/*Color of line*/,/*Pushpin color enum*/,/*Pushpin color enum*/ ).execute(/*LatLng(start)*/,/*LatLng(destination)*/);
-```
-
-actual code 
-``` java
-new Routing(this,mapView,Color.GREEN,Routing.Start.BLUE, Routing.Destination.ORANGE).execute(new LatLng(18.015365,-77.499382), new LatLng(18.012590,-77.500659));
-```
+*The library is bundled with start and end pushpins of various colours, check the example included or just have a look in the res folder.
+``
 Known Issues
 ------------
 *If after importing the project(s) you get an error stating that no resource was found that matches a given name,
@@ -97,10 +91,14 @@ Please fork  repository and contribute using pull requests.
 
 Any contributions, large or small, major features, bug fixes, additional language translations, unit/integration tests are welcomed and appreciated but will be thoroughly reviewed and discussed.
 
+Contributors
+------------
+[Cyrille Berliat](https://github.com/licryle)
+
 Developed By
 ------------
 * Joel Dean 
-* Hesham Saeed
+*   [Hesham Saeed](https://github.com/HeshamSaeed)
 
 
 [1]:http://i41.tinypic.com/2dw97r7.jpg
