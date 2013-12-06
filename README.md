@@ -1,4 +1,4 @@
-Google-Directions-Android
+Google-Directions-Android [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jd-alexander/google-directions-android/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 =========================
 
 This project allows you to  calculate the direction between two locations and display the route on a map based on the 
@@ -104,5 +104,5 @@ Developed By
 [1]:http://i41.tinypic.com/2dw97r7.jpg
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jd-alexander/google-directions-android/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 
