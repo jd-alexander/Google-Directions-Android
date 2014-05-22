@@ -28,3 +28,10 @@ proguard/
 *.ipr
 *.iws
 .idea/
+build
+
+# Stupid MAC
+.DS_STORE
+
+# gradle
+.gradle
