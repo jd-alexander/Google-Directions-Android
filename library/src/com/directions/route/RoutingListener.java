@@ -7,5 +7,5 @@ public interface RoutingListener {
 
     public void onRoutingStart();
 
-    public void onRoutingSuccess(PolylineOptions mPolyOptions);
+    public void onRoutingSuccess(PolylineOptions mPolyOptions, Route route);
 }
