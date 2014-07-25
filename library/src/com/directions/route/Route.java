@@ -15,6 +15,37 @@ public class Route {
     private String country;
     private int length;
     private String polyline;
+    private String durationText;
+    private String distanceText;
+    private String endAddressText;
+
+    public String getEndAddressText() {
+        return endAddressText;
+    }
+
+    public void setEndAddressText(String endAddressText) {
+        this.endAddressText = endAddressText;
+    }
+
+    public String getDurationText() {
+        return durationText;
+    }
+
+    public void setDurationText(String durationText) {
+        this.durationText = durationText;
+    }
+
+    public String getDistanceText() {
+        return distanceText;
+    }
+
+    public void setDistanceText(String distanceText) {
+        this.distanceText = distanceText;
+    }
+
+    public void setSegments(List<Segment> segments) {
+        this.segments = segments;
+    }
 
     public Route() {
         points = new ArrayList<LatLng>();
@@ -127,3 +158,4 @@ public class Route {
     }
 
 }
+
