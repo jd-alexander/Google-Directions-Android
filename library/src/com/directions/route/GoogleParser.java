@@ -50,7 +50,7 @@ public class GoogleParser extends XMLParser implements Parser {
             final JSONObject jsonNortheast = jsonBounds.getJSONObject("northeast");
             final JSONObject jsonSouthwest = jsonBounds.getJSONObject("southwest");
             
-            route.setLatLgnBounds(new LatLng(jsonNortheast.getLong("lat"),jsonNortheast.getLong("lng")), new LatLng(jsonSouthwest.getLong("lat"),jsonSouthwest.getLong("lng")));
+            route.setLatLgnBounds(new LatLng(jsonNortheast.getDouble("lat"),jsonNortheast.getDouble("lng")), new LatLng(jsonSouthwest.getDouble("lat"),jsonSouthwest.getDouble("lng")));
             
             //Get the leg, only one leg as we don't support waypoints
             final JSONObject leg = jsonRoute.getJSONArray("legs").getJSONObject(0);
