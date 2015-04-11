@@ -16,10 +16,10 @@ public class PlaceRouting extends AbstractRouting<String> {
 
     protected String constructURL(String... points) {
         final StringBuffer mBuf = new StringBuffer(AbstractRouting.DIRECTIONS_API_URL);
-        String from=null,to=null;
+        String from = null, to = null;
         try {
-            from = URLEncoder.encode(points[0],"utf-8");
-            to = URLEncoder.encode(points[1],"utf-8");
+            from = URLEncoder.encode(points[0], "utf-8");
+            to = URLEncoder.encode(points[1], "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;

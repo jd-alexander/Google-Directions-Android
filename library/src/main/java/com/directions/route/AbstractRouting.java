@@ -22,6 +22,7 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
     protected TravelMode _mTravelMode;
 
     protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
+
     public enum TravelMode {
         BIKING("biking"),
         DRIVING("driving"),
@@ -91,7 +92,7 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
     }
 
     @Override
-    protected void onPostExecute(Route result) {      
+    protected void onPostExecute(Route result) {
         if (result == null) {
             dispatchOnFailure();
         } else {

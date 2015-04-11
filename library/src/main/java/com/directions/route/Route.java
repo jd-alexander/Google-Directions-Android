@@ -15,7 +15,7 @@ public class Route {
     private String warning;
     private String country;
     private LatLngBounds latLgnBounds;
-	private int length;
+    private int length;
     private String polyline;
     private String durationText;
     private String distanceText;
@@ -158,24 +158,24 @@ public class Route {
     public String getPolyline() {
         return polyline;
     }
-    
+
     /**
      * @return the LatLngBounds object to map camera
      */
     public LatLngBounds getLatLgnBounds() {
-		return latLgnBounds;
-	}
-    
+        return latLgnBounds;
+    }
+
     /**
      * @param LatLgn northeast - from GoogleParser Bounds
      * @param LatLgn southwest - from GoogleParser Bounds
      */
-	public void setLatLgnBounds(LatLng northeast, LatLng southwest) {
-		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		builder.include(northeast);
-		builder.include(southwest);
-		this.latLgnBounds = builder.build();
-	}
+    public void setLatLgnBounds(LatLng northeast, LatLng southwest) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(northeast);
+        builder.include(southwest);
+        this.latLgnBounds = builder.build();
+    }
 
 }
 
