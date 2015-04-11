@@ -1,17 +1,4 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.8.+'
-    }
-}
-
-apply plugin: 'android'
-
-repositories {
-    mavenCentral()
-}
+apply plugin: 'com.android.application'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
@@ -19,12 +6,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19'
+    compileSdkVersion 21
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 19
+        minSdkVersion 14
+        targetSdkVersion 21
     }
 
     signingConfigs {
@@ -74,8 +61,7 @@ android {
     buildTypes {
         ProdRelease {
             debuggable false
-            jniDebugBuild false
-            runProguard false
+            minifyEnabled false
             proguardFile file('proguard-project.txt')
             signingConfig signingConfigs.release
         }
