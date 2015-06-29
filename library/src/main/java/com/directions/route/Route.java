@@ -166,10 +166,7 @@ public class Route {
         return latLgnBounds;
     }
 
-    /**
-     * @param LatLgn northeast - from GoogleParser Bounds
-     * @param LatLgn southwest - from GoogleParser Bounds
-     */
+
     public void setLatLgnBounds(LatLng northeast, LatLng southwest) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(northeast);

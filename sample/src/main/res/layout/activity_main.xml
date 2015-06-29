@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <fragment
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_height="wrap_content">
+        <AutoCompleteTextView
+            android:id="@+id/start"
+            android:layout_width="match_parent"
+            android:hint="Choose a starting point..."
+            android:layout_height="wrap_content"/>
+        <View
+            android:background="@drawable/dotted"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"/>
+        <AutoCompleteTextView
+            android:id="@+id/destination"
+            android:layout_width="match_parent"
+            android:hint="choose a destination..."
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</FrameLayout>
+
