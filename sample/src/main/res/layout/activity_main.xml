@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -10,26 +11,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <android.support.v7.widget.CardView
+        android:layout_gravity="center_horizontal|bottom"
+        android:id="@+id/cardview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:elevation="100dp"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardCornerRadius="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        >
     <LinearLayout
+        android:padding="20dp"
         android:background="@android:color/white"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_gravity="center_horizontal|bottom"
         android:layout_height="wrap_content">
         <AutoCompleteTextView
             android:id="@+id/start"
             android:layout_width="match_parent"
             android:hint="Choose a starting point..."
+            android:background="@android:color/transparent"
+            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"/>
         <View
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/dotted"
-            android:layout_width="fill_parent"
-            android:layout_height="1px"/>
+            android:layout_width="match_parent"
+            android:layout_height="5dp"/>
+
         <AutoCompleteTextView
+            android:background="@android:color/transparent"
             android:id="@+id/destination"
             android:layout_width="match_parent"
-            android:hint="choose a destination..."
+            android:hint="Choose a destination..."
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    </android.support.v7.widget.CardView>
 </FrameLayout>
 

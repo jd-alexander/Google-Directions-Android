@@ -3,6 +3,7 @@ package com.directions.sample;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.directions.route.Route;
@@ -21,7 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-public class MainActivity extends FragmentActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements RoutingListener, GoogleApiClient.OnConnectionFailedListener {
     protected GoogleMap map;
     protected LatLng start;
     protected LatLng end;
@@ -36,6 +37,8 @@ public class MainActivity extends FragmentActivity implements RoutingListener, G
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, 0 /* clientId */, this)
                 .addApi(Places.GEO_DATA_API)
@@ -53,7 +56,7 @@ public class MainActivity extends FragmentActivity implements RoutingListener, G
 
 
         CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(18.013610, -77.498803));
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
 
         map.moveCamera(center);
         map.animateCamera(zoom);
@@ -80,7 +83,7 @@ public class MainActivity extends FragmentActivity implements RoutingListener, G
     @Override
     public void onRoutingSuccess(PolylineOptions mPolyOptions, Route route) {
         PolylineOptions polyOptions = new PolylineOptions();
-        polyOptions.color(Color.BLUE);
+        polyOptions.color(getResources().getColor(R.color.primary_dark));
         polyOptions.width(10);
         polyOptions.addAll(mPolyOptions.getPoints());
         Log.v("test", mPolyOptions.getPoints().toString());
