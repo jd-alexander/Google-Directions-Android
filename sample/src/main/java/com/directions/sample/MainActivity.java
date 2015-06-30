@@ -21,6 +21,8 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -83,16 +85,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         }
         map = mapFragment.getMap();
 
-
-        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(18.013610, -77.498803));
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-        map.moveCamera(center);
-        map.animateCamera(zoom);
-
-
         mAdapter = new PlaceAutoCompleteAdapter(this, android.R.layout.simple_list_item_1,
                 mGoogleApiClient, BOUNDS_JAMAICA, null);
+
 
         /*
         * Updates the bounds being used by the auto complete adapter based on the position of the
@@ -102,10 +97,29 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             @Override
             public void onCameraChange(CameraPosition position) {
                 LatLngBounds bounds = map.getProjection().getVisibleRegion().latLngBounds;
-
                 mAdapter.setBounds(bounds);
             }
         });
+
+
+
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
+                .getCurrentPlace(mGoogleApiClient, null);
+        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult(PlaceLikelihoodBuffer likelyPlaces)
+            {
+
+                CameraUpdate center = CameraUpdateFactory.newLatLng(likelyPlaces.get(0).getPlace().getLatLng());
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+                likelyPlaces.release();
+            }
+        });
+
+
 
         /*
         * Adds auto complete adapter to both auto complete
