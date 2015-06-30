@@ -1,6 +1,9 @@
 package com.directions.sample;
 
 import android.app.ProgressDialog;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import butterknife.ButterKnife;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
+    private Polyline polyline;
 
 
     private static final LatLngBounds BOUNDS_JAMAICA= new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
@@ -102,22 +107,71 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         });
 
 
+        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(18.013610, -77.498803));
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
 
-        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                .getCurrentPlace(mGoogleApiClient, null);
-        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-            @Override
-            public void onResult(PlaceLikelihoodBuffer likelyPlaces)
-            {
+        map.moveCamera(center);
+        map.animateCamera(zoom);
 
-                CameraUpdate center = CameraUpdateFactory.newLatLng(likelyPlaces.get(0).getPlace().getLatLng());
-                CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-                map.moveCamera(center);
-                map.animateCamera(zoom);
-                likelyPlaces.release();
-            }
-        });
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 5000, 0,
+                new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+
+                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                        map.moveCamera(center);
+                        map.animateCamera(zoom);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                });
+
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                3000, 0, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                        map.moveCamera(center);
+                        map.animateCamera(zoom);
+
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                });
 
 
 
@@ -249,6 +303,18 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @OnClick(R.id.send)
+    public void sendRequest()
+    {
+        if(Util.Operations.isOnline(this))
+        {
+            route();
+        }
+        else
+        {
+            Toast.makeText(this,"No internet connectivity",Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void route()
     {
         if(start==null || end==null)
@@ -308,12 +374,17 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
         map.moveCamera(center);
 
+
+        if(polyline!=null)
+            polyline.remove();
+
+        polyline=null;
         //adds route to the map.
         PolylineOptions polyOptions = new PolylineOptions();
         polyOptions.color(getResources().getColor(R.color.primary_dark));
         polyOptions.width(10);
         polyOptions.addAll(mPolyOptions.getPoints());
-        map.addPolyline(polyOptions);
+        polyline=map.addPolyline(polyOptions);
 
         // Start marker
         MarkerOptions options = new MarkerOptions();
