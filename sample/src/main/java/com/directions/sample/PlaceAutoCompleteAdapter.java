@@ -181,7 +181,7 @@ public class PlaceAutoCompleteAdapter
             if (!status.isSuccess()) {
                 Toast.makeText(getContext(), "Error contacting API: " + status.toString(),
                         Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error getting autocomplete prediction API call: " + status.toString());
+                Log.e(TAG, "Error getting autocomplete prediction API call: " + status.getStatusMessage()+status.getStatus().getStatusMessage());
                 autocompletePredictions.release();
                 return null;
             }
@@ -227,5 +227,8 @@ public class PlaceAutoCompleteAdapter
         public String toString() {
             return description.toString();
         }
+
+
     }
+
 }

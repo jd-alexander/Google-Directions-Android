@@ -25,4 +25,5 @@ dependencies {
     compile project(':library')
     compile "com.google.android.gms:play-services-location:7.5.0"
     compile 'com.android.support:cardview-v7:21.0.2'
+    compile 'com.jakewharton:butterknife:6.1.0'
 }
