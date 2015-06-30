@@ -17,8 +17,8 @@ Grab via Maven:
 ```xml
 <dependency>
   <groupId>com.test</groupId>
-  <artifactId>butterknife</artifactId>
-  <version>7.0.0</version>
+  <artifactId>test</artifactId>
+  <version>1.0.0</version>
 </dependency>
 ```
 or Gradle:
@@ -75,7 +75,7 @@ Known Issues
 ------------
 * If the AutoComplete TextView/Map isn't probably the API key hasn't been set in the manifest.
 
-*If the route is not being displayed then type "Routing" in your log cat to see the potential error messages from the library.
+* If the route is not being displayed then type "Routing" in your log cat to see the potential error messages from the library.
 
 
 Contribution
