@@ -1,14 +1,10 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    maven {
-        url "https://jitpack.io"
-    }
-}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile 'com.google.android.gms:play-services-maps:7.5.0'
-    compile 'com.github.jd-alexander:Google-Directions-Android:v1.1'
 }
 
 android {
