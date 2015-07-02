@@ -10,7 +10,7 @@ This project allows you to calculate the direction between two locations and dis
 Sample
 ------------
 
-The sample makes use of the Google Places API for Android in order to provide a real life example of how the library can be used. You can check it out on the store.[You can check it out on the store](https://play.google.com/store/apps/details?id=com.directions.sample)
+The sample makes use of the Google Places API for Android in order to provide a real life example of how the library can be used.[You can check it out on the store.](https://play.google.com/store/apps/details?id=com.directions.sample)
 
 Download
 --------
