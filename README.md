@@ -72,7 +72,7 @@ actual code
 
 Known Issues
 ------------
-* If the AutoComplete TextView/Map isn't probably the API key hasn't been set in the manifest.
+*  If the AutoComplete TextView/Map of the sample app isnt working then probably the API key hasn't been set in the manifest.
 
 * If the route is not being displayed then type "Routing" in your log cat to see the potential error messages from the library.
 
