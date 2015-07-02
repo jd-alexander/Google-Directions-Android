@@ -1,29 +1,32 @@
 Google-Directions-Android
 =========================
 
-This project allows you to  calculate the direction between two locations and display the route on a Google Map using the Google Directions API..
+This project allows you to calculate the direction between two locations and display the route on a Google Map using the Google Directions API..
 
 
 
 ![Example Image][1]
 
+Sample
+------------
+
+The sample makes use of the Google Places API for Android in order to provide a real life example of how the library can be used. You can check it out on the store.[You can check it out on the store](https://play.google.com/store/apps/details?id=com.directions.sample)
 
 Download
 --------
 
-*Upload to jcenter is in progress.
 
 Grab via Maven:
 ```xml
 <dependency>
-  <groupId>com.test</groupId>
-  <artifactId>test</artifactId>
-  <version>1.0.0</version>
+  <groupId>com.github.jd-alexander</groupId>
+  <artifactId>library</artifactId>
+  <version>1.0.1</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'test'
+    compile 'com.github.jd-alexander:library:1.0.1'
 ```
 
 Usage
@@ -66,10 +69,6 @@ actual code
       }
 ```
 
-Sample
-------------
-
-The sample makes use of the Google Places API for Android in order to provide a real life example of how the library can be used.
 
 Known Issues
 ------------
