@@ -1,4 +1,4 @@
-Google-Directions-Android
+Google-Directions-Android [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jd-alexander/library/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.github.jd-alexander/library/)
 =========================
 
 This project allows you to calculate the direction between two locations and display the route on a Google Map using the Google Directions API..
