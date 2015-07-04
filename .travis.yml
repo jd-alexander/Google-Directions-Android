@@ -1,0 +1,11 @@
+before_install:
+ - chmod +x gradlew
+ org.gradle.daemon=true
+org.gradle.jvmargs=-XX:MaxPermSize=1024m -XX:+CMSClassUnloadingEnabled -XX:+HeapDumpOnOutOfMemoryError -Xmx2048m
+
+language: android
+android:
+  components:
+    - build-tools-22.0.1
+    - android-22
+    - extra
