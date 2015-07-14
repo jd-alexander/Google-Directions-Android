@@ -68,6 +68,12 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
         }
     }
 
+    private void dispatchOnCancelled() {
+        for (RoutingListener mListener : _aListeners) {
+            mListener.onRoutingCancelled();
+        }
+    }
+
     /**
      * Performs the call to the google maps API to acquire routing data and
      * deserializes it to a format the map can display.
@@ -105,4 +111,10 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
             dispatchOnSuccess(mOptions, result);
         }
     }//end onPostExecute method
+
+    @Override
+    protected void onCancelled() {
+        dispatchOnCancelled();
+    }
+
 }

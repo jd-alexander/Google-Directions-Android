@@ -8,4 +8,6 @@ public interface RoutingListener {
     public void onRoutingStart();
 
     public void onRoutingSuccess(PolylineOptions mPolyOptions, Route route);
+
+    public void onRoutingCancelled();
 }
