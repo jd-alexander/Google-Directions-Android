@@ -15,9 +15,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
+public abstract class AbstractRouting<T> extends AsyncTask<T, Void, List<Route>> {
     protected ArrayList<RoutingListener> _aListeners;
     protected TravelMode _mTravelMode;
 
@@ -62,9 +63,9 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
         }
     }
 
-    protected void dispatchOnSuccess(PolylineOptions mOptions, Route route) {
+    protected void dispatchOnSuccess(PolylineOptions mOptions, List<Route> routes) {
         for (RoutingListener mListener : _aListeners) {
-            mListener.onRoutingSuccess(mOptions, route);
+            mListener.onRoutingSuccess(mOptions, routes);
         }
     }
 
@@ -76,7 +77,7 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
      * @return
      */
     @Override
-    protected Route doInBackground(T... aPoints) {
+    protected List<Route> doInBackground(T... aPoints) {
         for (T mPoint : aPoints) {
             if (mPoint == null) return null;
         }
@@ -92,14 +93,15 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
     }
 
     @Override
-    protected void onPostExecute(Route result) {
+    protected void onPostExecute(List<Route> result) {
         if (result == null) {
             dispatchOnFailure();
         } else {
             PolylineOptions mOptions = new PolylineOptions();
-
-            for (LatLng point : result.getPoints()) {
-                mOptions.add(point);
+            for (Route route : result) {
+                for (LatLng point : route.getPoints()) {
+                    mOptions.add(point);
+                }
             }
 
             dispatchOnSuccess(mOptions, result);
