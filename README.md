@@ -44,18 +44,19 @@ To calculate the route you simply instantiate a Routing object and trigger the e
 
         Routing routing = new Routing(/* Travel Mode */);
         routing.registerListener(/* Listener that delivers routing results.*/);
-        routing.execute(/*LatLng(start)*/, /*LatLng(destination)*/);
+        routing.execute(/*waypoints*/);
         
 ```
 
 actual code 
 ``` java
         start = new LatLng(18.015365, -77.499382);
+        waypoint= new LatLng(17.01767, -77.499333); 
         end = new LatLng(18.012590, -77.500659);
         
         Routing routing = new Routing(Routing.TravelMode.WALKING);
         routing.registerListener(this);
-        routing.execute(start, end);
+        routing.execute(start,waypoint, end);
         
         .....
         
