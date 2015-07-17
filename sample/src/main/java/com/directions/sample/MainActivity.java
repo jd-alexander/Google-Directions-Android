@@ -400,6 +400,11 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @Override
+    public void onRoutingCancelled() {
+        Log.i(LOG_TAG, "Routing was cancelled.");
+    }
+
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
         Log.v(LOG_TAG,connectionResult.toString());
