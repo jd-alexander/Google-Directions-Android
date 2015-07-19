@@ -2,24 +2,14 @@ package com.directions.route;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.List;
-
 /**
  * Async Task to access the Google Direction API and return the routing data.
  * Created by Furkan Tektas on 10/14/14.
  */
 public class Routing extends AbstractRouting<LatLng> {
 
-    private final int mAvoidKinds;
-
     public Routing(TravelMode mTravelMode) {
         super(mTravelMode);
-        mAvoidKinds = 0;
-    }
-
-    private Routing(Builder builder) {
-        super(builder.travelMode);
-        mAvoidKinds = builder.avoidKinds;
     }
 
     protected String constructURL(LatLng... points) {
@@ -55,40 +45,10 @@ public class Routing extends AbstractRouting<LatLng> {
             mBuf.setLength(mBuf.length() - 1);
         }
 
-        if (mAvoidKinds > 0) {
-            mBuf.append("&avoid=");
-            mBuf.append(AvoidKind.getRequestParam(mAvoidKinds));
-        }
-
         mBuf.append("&sensor=true&mode=");
         mBuf.append(_mTravelMode.getValue());
 
 
         return mBuf.toString();
     }
-
-    public static class Builder {
-
-        private final TravelMode travelMode;
-
-        private int avoidKinds;
-
-        public Builder (TravelMode travelMode) {
-            this.travelMode = travelMode;
-            this.avoidKinds = 0;
-        }
-
-        public Builder avoid (AvoidKind... avoids) {
-            for (AvoidKind avoidKind : avoids) {
-                this.avoidKinds |= avoidKind.getBitValue();
-            }
-            return this;
-        }
-
-        public Routing build () {
-            return new Routing(this);
-        }
-
-    }
-
 }

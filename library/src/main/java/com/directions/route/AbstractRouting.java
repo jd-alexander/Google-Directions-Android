@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
@@ -41,34 +40,6 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
         }
     }
 
-    public enum AvoidKind {
-        TOLLS (1, "tolls"),
-        HIGHWAYS (1 << 1, "highways"),
-        FERRIES (1 << 2, "ferries");
-
-        private final String _sRequestParam;
-        private final int _sBitValue;
-
-        private AvoidKind (int bit, String param) {
-            this._sBitValue = bit;
-            this._sRequestParam = param;
-        }
-
-        protected int getBitValue () {
-            return _sBitValue;
-        }
-
-        protected static String getRequestParam (int bit) {
-            String ret = "";
-            for (AvoidKind kind : AvoidKind.values()) {
-                if ((bit & kind._sBitValue) == kind._sBitValue) {
-                    ret += kind._sRequestParam;
-                    ret += "|";
-                }
-            }
-            return ret;
-        }
-    }
 
     public AbstractRouting(TravelMode mTravelMode) {
         this._aListeners = new ArrayList<RoutingListener>();
