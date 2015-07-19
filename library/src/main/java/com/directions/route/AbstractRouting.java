@@ -17,9 +17,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 
-public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
+public abstract class AbstractRouting extends AsyncTask<Void, Void, Route> {
     protected ArrayList<RoutingListener> _aListeners;
-    protected TravelMode _mTravelMode;
 
     protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
 
@@ -40,14 +39,44 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
         }
     }
 
+    public enum AvoidKind {
+        TOLLS (1, "tolls"),
+        HIGHWAYS (1 << 1, "highways"),
+        FERRIES (1 << 2, "ferries");
 
-    public AbstractRouting(TravelMode mTravelMode) {
+        private final String _sRequestParam;
+        private final int _sBitValue;
+
+        private AvoidKind (int bit, String param) {
+            this._sBitValue = bit;
+            this._sRequestParam = param;
+        }
+
+        protected int getBitValue () {
+            return _sBitValue;
+        }
+
+        protected static String getRequestParam (int bit) {
+            String ret = "";
+            for (AvoidKind kind : AvoidKind.values()) {
+                if ((bit & kind._sBitValue) == kind._sBitValue) {
+                    ret += kind._sRequestParam;
+                    ret += "|";
+                }
+            }
+            return ret;
+        }
+    }
+
+    protected AbstractRouting (RoutingListener listener) {
         this._aListeners = new ArrayList<RoutingListener>();
-        this._mTravelMode = mTravelMode;
+        registerListener(listener);
     }
 
     public void registerListener(RoutingListener mListener) {
-        _aListeners.add(mListener);
+        if (mListener != null) {
+            _aListeners.add(mListener);
+        }
     }
 
     protected void dispatchOnStart() {
@@ -78,19 +107,15 @@ public abstract class AbstractRouting<T> extends AsyncTask<T, Void, Route> {
      * Performs the call to the google maps API to acquire routing data and
      * deserializes it to a format the map can display.
      *
-     * @param aPoints
+     * @param
      * @return
      */
     @Override
-    protected Route doInBackground(T... aPoints) {
-        for (T mPoint : aPoints) {
-            if (mPoint == null) return null;
-        }
-
-        return new GoogleParser(constructURL(aPoints)).parse();
+    protected Route doInBackground(Void... voids) {
+        return new GoogleParser(constructURL()).parse();
     }
 
-    protected abstract String constructURL(T... points);
+    protected abstract String constructURL();
 
     @Override
     protected void onPreExecute() {
