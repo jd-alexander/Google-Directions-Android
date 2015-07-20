@@ -39,6 +39,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -345,9 +348,13 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         {
             progressDialog = ProgressDialog.show(this, "Please wait.",
                     "Fetching route information.", true);
-            Routing routing = new Routing.Builder(start, end)
+            List<LatLng> waypoints = new ArrayList<>();
+            waypoints.add(start);
+            waypoints.add(end);
+            Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
+                    .waypoints(waypoints)
                     .build();
             routing.execute();
         }

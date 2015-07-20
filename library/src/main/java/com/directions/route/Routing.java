@@ -11,17 +11,12 @@ import java.util.List;
  */
 public class Routing extends AbstractRouting {
 
-    private final LatLng origin;
-    private final LatLng destination;
-
     private final TravelMode travelMode;
     private final List<LatLng> waypoints;
     private final int avoidKinds;
 
     private Routing(Builder builder) {
         super(builder.listener);
-        this.origin = builder.origin;
-        this.destination = builder.destination;
         this.travelMode = builder.travelMode;
         this.waypoints = builder.waypoints;
         this.avoidKinds = builder.avoidKinds;
@@ -31,12 +26,14 @@ public class Routing extends AbstractRouting {
         final StringBuffer stringBuffer = new StringBuffer(AbstractRouting.DIRECTIONS_API_URL);
 
         // origin
+        final LatLng origin = waypoints.get(0);
         stringBuffer.append("origin=");
         stringBuffer.append(origin.latitude);
         stringBuffer.append(',');
         stringBuffer.append(origin.longitude);
 
         // destination
+        final LatLng destination = waypoints.get(waypoints.size() - 1);
         stringBuffer.append("&destination=");
         stringBuffer.append(destination.latitude);
         stringBuffer.append(',');
@@ -47,9 +44,10 @@ public class Routing extends AbstractRouting {
         stringBuffer.append(travelMode.getValue());
 
         // waypoints
-        if (waypoints.size() > 0) {
+        if (waypoints.size() > 2) {
             stringBuffer.append("&waypoints=");
-            for (LatLng p : waypoints) {
+            for (int i = 1; i < waypoints.size() - 1; i++) {
+                final LatLng p = waypoints.get(i);
                 stringBuffer.append("via:"); // we don't want to parse the resulting JSON for 'legs'.
                 stringBuffer.append(p.latitude);
                 stringBuffer.append(",");
@@ -72,17 +70,12 @@ public class Routing extends AbstractRouting {
 
     public static class Builder {
 
-        private final LatLng origin;
-        private final LatLng destination;
-
         private TravelMode travelMode;
         private List<LatLng> waypoints;
         private int avoidKinds;
         private RoutingListener listener;
 
-        public Builder (LatLng origin, LatLng destination) {
-            this.origin = origin;
-            this.destination = destination;
+        public Builder () {
             this.travelMode = TravelMode.DRIVING;
             this.waypoints = new ArrayList<>();
             this.avoidKinds = 0;
@@ -95,6 +88,7 @@ public class Routing extends AbstractRouting {
         }
 
         public Builder waypoints (LatLng... points) {
+            waypoints.clear();
             for (LatLng p : points) {
                 waypoints.add(p);
             }
@@ -102,7 +96,7 @@ public class Routing extends AbstractRouting {
         }
 
         public Builder waypoints (List<LatLng> waypoints) {
-            this.waypoints = waypoints;
+            this.waypoints = new ArrayList<>(waypoints);
             return this;
         }
 
@@ -119,6 +113,9 @@ public class Routing extends AbstractRouting {
         }
 
         public Routing build () {
+            if (this.waypoints.size() < 2) {
+                throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
+            }
             return new Routing(this);
         }
 
