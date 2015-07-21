@@ -348,13 +348,10 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         {
             progressDialog = ProgressDialog.show(this, "Please wait.",
                     "Fetching route information.", true);
-            List<LatLng> waypoints = new ArrayList<>();
-            waypoints.add(start);
-            waypoints.add(end);
             Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
-                    .waypoints(waypoints)
+                    .waypoints(start, end)
                     .build();
             routing.execute();
         }
