@@ -33,7 +33,7 @@ or Gradle:
 Usage
 -----
 
-To calculate the route you simply instantiate a Routing object and trigger the execute function with required parameters.
+To calculate the route you simply instantiate a Routing object and trigger the execute function.
 
 
 *You can execute the task in this manner. ( See the example for more details on the exact implementation)
@@ -42,21 +42,27 @@ To calculate the route you simply instantiate a Routing object and trigger the e
 
 ``` java
 
-        Routing routing = new Routing(/* Travel Mode */);
-        routing.registerListener(/* Listener that delivers routing results.*/);
-        routing.execute(/*waypoints*/);
+        Routing routing = new Routing.Builder()
+                    .travelMode(/* Travel Mode */)
+                    .withListener(/* Listener that delivers routing results.*/)
+                    .waypoints(/*waypoints*/)
+                    .build();
+        routing.execute();
         
 ```
 
 actual code 
 ``` java
         start = new LatLng(18.015365, -77.499382);
-        waypoint= new LatLng(17.01767, -77.499333); 
+        waypoint= new LatLng(18.01455, -77.499333);
         end = new LatLng(18.012590, -77.500659);
         
-        Routing routing = new Routing(Routing.TravelMode.WALKING);
-        routing.registerListener(this);
-        routing.execute(start,waypoint, end);
+        Routing routing = new Routing.Builder()
+                    .travelMode(Routing.TravelMode.WALKING)
+                    .withListener(this)
+                    .waypoints(start, waypoint, end)
+                    .build();
+        routing.execute();
         
         .....
         
