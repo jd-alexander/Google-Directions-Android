@@ -22,18 +22,18 @@ Grab via Maven:
 <dependency>
   <groupId>com.github.jd-alexander</groupId>
   <artifactId>library</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-    compile 'com.github.jd-alexander:library:1.0.1'
+    compile 'com.github.jd-alexander:library:1.0.2'
 ```
 
 Usage
 -----
 
-To calculate the route you simply instantiate a Routing object and trigger the execute function.
+To calculate the route you simply instantiate a Routing object and trigger the execute function with required parameters.
 
 
 *You can execute the task in this manner. ( See the example for more details on the exact implementation)
@@ -42,27 +42,21 @@ To calculate the route you simply instantiate a Routing object and trigger the e
 
 ``` java
 
-        Routing routing = new Routing.Builder()
-                    .travelMode(/* Travel Mode */)
-                    .withListener(/* Listener that delivers routing results.*/)
-                    .waypoints(/*waypoints*/)
-                    .build();
-        routing.execute();
+        Routing routing = new Routing(/* Travel Mode */);
+        routing.registerListener(/* Listener that delivers routing results.*/);
+        routing.execute(/*waypoints*/);
         
 ```
 
 actual code 
 ``` java
         start = new LatLng(18.015365, -77.499382);
-        waypoint= new LatLng(18.01455, -77.499333);
+        waypoint= new LatLng(17.01767, -77.499333); 
         end = new LatLng(18.012590, -77.500659);
         
-        Routing routing = new Routing.Builder()
-                    .travelMode(Routing.TravelMode.WALKING)
-                    .withListener(this)
-                    .waypoints(start, waypoint, end)
-                    .build();
-        routing.execute();
+        Routing routing = new Routing(Routing.TravelMode.WALKING);
+        routing.registerListener(this);
+        routing.execute(start,waypoint, end);
         
         .....
         
@@ -125,7 +119,6 @@ License
 
 
 [1]:http://i57.tinypic.com/2m7j04x.png
-
 
 
 
