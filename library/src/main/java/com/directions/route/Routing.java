@@ -2,6 +2,7 @@ package com.directions.route;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.nio.charset.IllegalCharsetNameException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +15,14 @@ public class Routing extends AbstractRouting {
     private final TravelMode travelMode;
     private final List<LatLng> waypoints;
     private final int avoidKinds;
+    private final boolean optimize;
 
     private Routing(Builder builder) {
         super(builder.listener);
         this.travelMode = builder.travelMode;
         this.waypoints = builder.waypoints;
         this.avoidKinds = builder.avoidKinds;
+        this.optimize = builder.optimize;
     }
 
     protected String constructURL () {
@@ -46,6 +49,8 @@ public class Routing extends AbstractRouting {
         // waypoints
         if (waypoints.size() > 2) {
             stringBuffer.append("&waypoints=");
+            if(optimize)
+                stringBuffer.append("optimize:true|");
             for (int i = 1; i < waypoints.size() - 1; i++) {
                 final LatLng p = waypoints.get(i);
                 stringBuffer.append("via:"); // we don't want to parse the resulting JSON for 'legs'.
@@ -74,12 +79,14 @@ public class Routing extends AbstractRouting {
         private List<LatLng> waypoints;
         private int avoidKinds;
         private RoutingListener listener;
+        private boolean optimize;
 
         public Builder () {
             this.travelMode = TravelMode.DRIVING;
             this.waypoints = new ArrayList<>();
             this.avoidKinds = 0;
             this.listener = null;
+            this.optimize = false;
         }
 
         public Builder travelMode (TravelMode travelMode) {
@@ -100,6 +107,11 @@ public class Routing extends AbstractRouting {
             return this;
         }
 
+        public Builder optimize(boolean optimize) {
+            this.optimize = optimize;
+            return this;
+        }
+
         public Builder avoid (AvoidKind... avoids) {
             for (AvoidKind avoidKind : avoids) {
                 this.avoidKinds |= avoidKind.getBitValue();
@@ -115,6 +127,9 @@ public class Routing extends AbstractRouting {
         public Routing build () {
             if (this.waypoints.size() < 2) {
                 throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
+            }
+            if (this.waypoints.size() <= 2 && this.optimize) {
+                throw new IllegalCharsetNameException("You need at least three waypoints to enable optimize");
             }
             return new Routing(this);
         }
