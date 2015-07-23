@@ -2,7 +2,6 @@ package com.directions.route;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.nio.charset.IllegalCharsetNameException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +128,7 @@ public class Routing extends AbstractRouting {
                 throw new IllegalArgumentException("Must supply at least two waypoints to route between.");
             }
             if (this.waypoints.size() <= 2 && this.optimize) {
-                throw new IllegalCharsetNameException("You need at least three waypoints to enable optimize");
+                throw new IllegalArgumentException("You need at least three waypoints to enable optimize");
             }
             return new Routing(this);
         }
