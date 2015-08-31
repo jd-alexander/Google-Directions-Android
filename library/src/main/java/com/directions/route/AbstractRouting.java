@@ -17,10 +17,14 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.ArrayList;
 
 
-public abstract class AbstractRouting extends AsyncTask<Void, Void, Route> {
+public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Route>> {
     protected ArrayList<RoutingListener> _aListeners;
 
     protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
+
+    public enum RouteMode {
+        SHORTEST, FASTEST
+    }
 
     public enum TravelMode {
         BIKING("biking"),
@@ -111,7 +115,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, Route> {
      * @return
      */
     @Override
-    protected Route doInBackground(Void... voids) {
+    protected ArrayList<Route> doInBackground(Void... voids) {
         return new GoogleParser(constructURL()).parse();
     }
 
@@ -123,17 +127,27 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, Route> {
     }
 
     @Override
-    protected void onPostExecute(Route result) {
+    protected void onPostExecute(ArrayList<Route> result) {
         if (result == null) {
             dispatchOnFailure();
         } else {
             PolylineOptions mOptions = new PolylineOptions();
 
-            for (LatLng point : result.getPoints()) {
+            Route shortestRoute = null;
+            int minDistance = Integer.MAX_VALUE;
+
+            for (Route route : result) {
+                if (route.getLength() < minDistance) {
+                    shortestRoute = route;
+                    minDistance = route.getLength();
+                }
+            }
+
+            for (LatLng point : shortestRoute.getPoints()) {
                 mOptions.add(point);
             }
 
-            dispatchOnSuccess(mOptions, result);
+            dispatchOnSuccess(mOptions, shortestRoute);
         }
     }//end onPostExecute method
 

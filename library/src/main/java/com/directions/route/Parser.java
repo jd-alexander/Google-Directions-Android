@@ -1,6 +1,8 @@
 package com.directions.route;
 
+import java.util.List;
+
 //. by Haseem Saheed
 public interface Parser {
-    public Route parse();
+    public List<Route> parse();
 }
