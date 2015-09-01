@@ -88,7 +88,7 @@ public class GoogleParser extends XMLParser implements Parser {
                 final int length = step.getJSONObject("distance").getInt("value");
                 distance += length;
                 segment.setLength(length);
-                segment.setDistance(distance / 1000);
+                segment.setDistance((double)distance / (double)1000);
                 //Strip html from google directions and set as turn instruction
                 segment.setInstruction(step.getString("html_instructions").replaceAll("<(.*?)*>", ""));
                 //Retrieve & decode this segment's polyline and add it to the route.
