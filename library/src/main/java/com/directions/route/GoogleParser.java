@@ -78,10 +78,11 @@ public class GoogleParser extends XMLParser implements Parser {
                 if (!jsonRoute.getJSONArray("warnings").isNull(0)) {
                     route.setWarning(jsonRoute.getJSONArray("warnings").getString(0));
                 }
-                    /* Loop through the steps, creating a segment for each one and
-                     * decoding any polylines found as we go to add to the route object's
-                     * map array. Using an explicit for loop because it is faster!
-                     */
+                
+                /* Loop through the steps, creating a segment for each one and
+                 * decoding any polylines found as we go to add to the route object's
+                 * map array. Using an explicit for loop because it is faster!
+                 */
                 for (int y = 0; y < numSteps; y++) {
                     //Get the individual step
                     final JSONObject step = steps.getJSONObject(y);
