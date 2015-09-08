@@ -12,6 +12,7 @@ import java.util.List;
 public class Routing extends AbstractRouting {
 
     private final TravelMode travelMode;
+    private final RouteMode  routeMode;
     private final List<LatLng> waypoints;
     private final int avoidKinds;
     private final boolean optimize;
@@ -22,6 +23,7 @@ public class Routing extends AbstractRouting {
         this.waypoints = builder.waypoints;
         this.avoidKinds = builder.avoidKinds;
         this.optimize = builder.optimize;
+        this.routeMode = builder.routeMode;
     }
 
     protected String constructURL () {
@@ -66,6 +68,10 @@ public class Routing extends AbstractRouting {
             stringBuffer.append(AvoidKind.getRequestParam(avoidKinds));
         }
 
+        if (routeMode == RouteMode.SHORTEST) {
+            stringBuffer.append("&alternatives=true");
+        }
+
         // sensor
         stringBuffer.append("&sensor=true");
 
@@ -75,6 +81,7 @@ public class Routing extends AbstractRouting {
     public static class Builder {
 
         private TravelMode travelMode;
+        private RouteMode  routeMode;
         private List<LatLng> waypoints;
         private int avoidKinds;
         private RoutingListener listener;
@@ -82,6 +89,7 @@ public class Routing extends AbstractRouting {
 
         public Builder () {
             this.travelMode = TravelMode.DRIVING;
+            this.routeMode = RouteMode.FASTEST;
             this.waypoints = new ArrayList<>();
             this.avoidKinds = 0;
             this.listener = null;
@@ -90,6 +98,11 @@ public class Routing extends AbstractRouting {
 
         public Builder travelMode (TravelMode travelMode) {
             this.travelMode = travelMode;
+            return this;
+        }
+
+        public Builder routeMode (RouteMode routeMode) {
+            this.routeMode = routeMode;
             return this;
         }
 
