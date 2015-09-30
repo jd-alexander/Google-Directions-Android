@@ -70,7 +70,9 @@ public class GoogleParser extends XMLParser implements Parser {
                 route.setCopyright(jsonRoute.getString("copyrights"));
                 //Get distance and time estimation
                 route.setDurationText(leg.getJSONObject("duration").getString("text"));
+                route.setDurationValue(leg.getJSONObject("duration").getInt("value"));
                 route.setDistanceText(leg.getJSONObject("distance").getString("text"));
+                route.setDistanceValue(leg.getJSONObject("distance").getInt("value"));
                 route.setEndAddressText(leg.getString("end_address"));
                 //Get the total length of the route.
                 route.setLength(leg.getJSONObject("distance").getInt("value"));

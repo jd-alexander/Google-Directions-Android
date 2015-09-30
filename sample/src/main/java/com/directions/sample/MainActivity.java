@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
-    private Polyline polyline;
+    private ArrayList<Polyline> polylines;
+    private int[] colors = new int[]{R.color.primary_dark,R.color.primary,R.color.primary_light,R.color.accent,R.color.primary_dark_material_light};
 
 
     private static final LatLngBounds BOUNDS_JAMAICA= new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         ButterKnife.inject(this);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        polylines = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addConnectionCallbacks(this)
@@ -351,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             Routing routing = new Routing.Builder()
                     .travelMode(AbstractRouting.TravelMode.DRIVING)
                     .withListener(this)
+                    .alternativeRoutes(true)
                     .waypoints(start, end)
                     .build();
             routing.execute();
@@ -371,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @Override
-    public void onRoutingSuccess(PolylineOptions mPolyOptions, Route route)
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex)
     {
         progressDialog.dismiss();
         CameraUpdate center = CameraUpdateFactory.newLatLng(start);
@@ -380,16 +383,28 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         map.moveCamera(center);
 
 
-        if(polyline!=null)
-            polyline.remove();
+        if(polylines.size()>0) {
+            for (Polyline poly : polylines) {
+                poly.remove();
+            }
+        }
 
-        polyline=null;
-        //adds route to the map.
-        PolylineOptions polyOptions = new PolylineOptions();
-        polyOptions.color(getResources().getColor(R.color.primary_dark));
-        polyOptions.width(10);
-        polyOptions.addAll(mPolyOptions.getPoints());
-        polyline=map.addPolyline(polyOptions);
+        polylines = new ArrayList<>();
+        //add route(s) to the map.
+        for (int i = 0; i <route.size(); i++) {
+
+            //In case of more than 5 alternative routes
+            int colorIndex = i % colors.length;
+
+            PolylineOptions polyOptions = new PolylineOptions();
+            polyOptions.color(getResources().getColor(colors[colorIndex]));
+            polyOptions.width(10 + i * 3);
+            polyOptions.addAll(route.get(i).getPoints());
+            Polyline polyline = map.addPolyline(polyOptions);
+            polylines.add(polyline);
+
+            Toast.makeText(getApplicationContext(),"Route "+ (i+1) +": distance - "+ route.get(i).getDistanceValue()+": duration - "+ route.get(i).getDurationValue(),Toast.LENGTH_SHORT).show();
+        }
 
         // Start marker
         MarkerOptions options = new MarkerOptions();
@@ -402,6 +417,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         options.position(end);
         options.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green));
         map.addMarker(options);
+
     }
 
     @Override
