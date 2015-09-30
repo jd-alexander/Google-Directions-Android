@@ -16,6 +16,7 @@ public class Routing extends AbstractRouting {
     private final List<LatLng> waypoints;
     private final int avoidKinds;
     private final boolean optimize;
+    private final String language;
 
     private Routing(Builder builder) {
         super(builder.listener);
@@ -75,6 +76,11 @@ public class Routing extends AbstractRouting {
         // sensor
         stringBuffer.append("&sensor=true");
 
+        // language
+        if (language != null) {
+            stringBuffer.append("&language=").append(language);
+        }
+
         return stringBuffer.toString();
     }
 
@@ -86,6 +92,7 @@ public class Routing extends AbstractRouting {
         private int avoidKinds;
         private RoutingListener listener;
         private boolean optimize;
+        private String language;
 
         public Builder () {
             this.travelMode = TravelMode.DRIVING;
@@ -94,6 +101,7 @@ public class Routing extends AbstractRouting {
             this.avoidKinds = 0;
             this.listener = null;
             this.optimize = false;
+            this.language = null;
         }
 
         public Builder travelMode (TravelMode travelMode) {
@@ -128,6 +136,11 @@ public class Routing extends AbstractRouting {
             for (AvoidKind avoidKind : avoids) {
                 this.avoidKinds |= avoidKind.getBitValue();
             }
+            return this;
+        }
+
+        public Builder language (String language) {
+            this.language = language;
             return this;
         }
 
