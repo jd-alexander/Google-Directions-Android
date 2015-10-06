@@ -22,10 +22,6 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
 
     protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
 
-    public enum RouteMode {
-        SHORTEST, FASTEST
-    }
-
     public enum TravelMode {
         BIKING("biking"),
         DRIVING("driving"),
@@ -95,9 +91,9 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
         }
     }
 
-    protected void dispatchOnSuccess(PolylineOptions mOptions, Route route) {
+    protected void dispatchOnSuccess(ArrayList<Route> route, int shortestRouteIndex) {
         for (RoutingListener mListener : _aListeners) {
-            mListener.onRoutingSuccess(mOptions, route);
+            mListener.onRoutingSuccess(route, shortestRouteIndex);
         }
     }
 
@@ -131,23 +127,25 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
         if (result == null) {
             dispatchOnFailure();
         } else {
-            PolylineOptions mOptions = new PolylineOptions();
-
-            Route shortestRoute = null;
+            int shortestRouteIndex = 0;
             int minDistance = Integer.MAX_VALUE;
 
-            for (Route route : result) {
+            for (int i = 0; i < result.size(); i++) {
+                PolylineOptions mOptions = new PolylineOptions();
+                Route route = result.get(i);
+
+                //Find the shortest route index
                 if (route.getLength() < minDistance) {
-                    shortestRoute = route;
+                    shortestRouteIndex = i;
                     minDistance = route.getLength();
                 }
-            }
 
-            for (LatLng point : shortestRoute.getPoints()) {
-                mOptions.add(point);
+                for (LatLng point : route.getPoints()) {
+                    mOptions.add(point);
+                }
+                result.get(i).setPolyOptions(mOptions);
             }
-
-            dispatchOnSuccess(mOptions, shortestRoute);
+            dispatchOnSuccess(result, shortestRouteIndex);
         }
     }//end onPostExecute method
 

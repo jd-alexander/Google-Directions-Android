@@ -12,7 +12,7 @@ import java.util.List;
 public class Routing extends AbstractRouting {
 
     private final TravelMode travelMode;
-    private final RouteMode  routeMode;
+    private final boolean  alternativeRoutes;
     private final List<LatLng> waypoints;
     private final int avoidKinds;
     private final boolean optimize;
@@ -24,7 +24,7 @@ public class Routing extends AbstractRouting {
         this.waypoints = builder.waypoints;
         this.avoidKinds = builder.avoidKinds;
         this.optimize = builder.optimize;
-        this.routeMode = builder.routeMode;
+        this.alternativeRoutes = builder.alternativeRoutes;
     }
 
     protected String constructURL () {
@@ -69,7 +69,7 @@ public class Routing extends AbstractRouting {
             stringBuffer.append(AvoidKind.getRequestParam(avoidKinds));
         }
 
-        if (routeMode == RouteMode.SHORTEST) {
+        if (alternativeRoutes == true) {
             stringBuffer.append("&alternatives=true");
         }
 
@@ -87,7 +87,7 @@ public class Routing extends AbstractRouting {
     public static class Builder {
 
         private TravelMode travelMode;
-        private RouteMode  routeMode;
+        private boolean alternativeRoutes;
         private List<LatLng> waypoints;
         private int avoidKinds;
         private RoutingListener listener;
@@ -96,7 +96,7 @@ public class Routing extends AbstractRouting {
 
         public Builder () {
             this.travelMode = TravelMode.DRIVING;
-            this.routeMode = RouteMode.FASTEST;
+            this.alternativeRoutes = false;
             this.waypoints = new ArrayList<>();
             this.avoidKinds = 0;
             this.listener = null;
@@ -109,8 +109,8 @@ public class Routing extends AbstractRouting {
             return this;
         }
 
-        public Builder routeMode (RouteMode routeMode) {
-            this.routeMode = routeMode;
+        public Builder alternativeRoutes (boolean alternativeRoutes) {
+            this.alternativeRoutes = alternativeRoutes;
             return this;
         }
 

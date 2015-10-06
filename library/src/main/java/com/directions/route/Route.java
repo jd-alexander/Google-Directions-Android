@@ -3,6 +3,7 @@ package com.directions.route;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,19 @@ public class Route {
     private int length;
     private String polyline;
     private String durationText;
+    private int durationValue;
     private String distanceText;
+    private int distanceValue;
     private String endAddressText;
+    private PolylineOptions polyOptions;
+
+    public PolylineOptions getPolyOptions() {
+        return polyOptions;
+    }
+
+    public void setPolyOptions(PolylineOptions polyOptions) {
+        this.polyOptions = polyOptions;
+    }
 
     public String getEndAddressText() {
         return endAddressText;
@@ -43,6 +55,22 @@ public class Route {
 
     public void setDistanceText(String distanceText) {
         this.distanceText = distanceText;
+    }
+
+    public int getDurationValue() {
+        return durationValue;
+    }
+
+    public void setDurationValue(int durationValue) {
+        this.durationValue = durationValue;
+    }
+
+    public int getDistanceValue() {
+        return distanceValue;
+    }
+
+    public void setDistanceValue(int distanceValue) {
+        this.distanceValue = distanceValue;
     }
 
     public void setSegments(List<Segment> segments) {
