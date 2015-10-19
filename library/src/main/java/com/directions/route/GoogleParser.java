@@ -130,7 +130,7 @@ public class GoogleParser extends XMLParser implements Parser {
         final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         final StringBuilder sBuf = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
                 sBuf.append(line);
@@ -140,6 +140,7 @@ public class GoogleParser extends XMLParser implements Parser {
         } finally {
             try {
                 input.close();
+                reader.close();
             } catch (IOException e) {
                 Log.e("Routing Error", e.getMessage());
             }

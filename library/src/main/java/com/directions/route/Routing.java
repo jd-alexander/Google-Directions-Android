@@ -3,6 +3,7 @@ package com.directions.route;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,63 +26,64 @@ public class Routing extends AbstractRouting {
         this.avoidKinds = builder.avoidKinds;
         this.optimize = builder.optimize;
         this.alternativeRoutes = builder.alternativeRoutes;
+        this.language = builder.language;
     }
 
     protected String constructURL () {
-        final StringBuffer stringBuffer = new StringBuffer(AbstractRouting.DIRECTIONS_API_URL);
+        final StringBuilder stringBuilder = new StringBuilder(AbstractRouting.DIRECTIONS_API_URL);
 
         // origin
         final LatLng origin = waypoints.get(0);
-        stringBuffer.append("origin=");
-        stringBuffer.append(origin.latitude);
-        stringBuffer.append(',');
-        stringBuffer.append(origin.longitude);
+        stringBuilder.append("origin=");
+        stringBuilder.append(origin.latitude);
+        stringBuilder.append(',');
+        stringBuilder.append(origin.longitude);
 
         // destination
         final LatLng destination = waypoints.get(waypoints.size() - 1);
-        stringBuffer.append("&destination=");
-        stringBuffer.append(destination.latitude);
-        stringBuffer.append(',');
-        stringBuffer.append(destination.longitude);
+        stringBuilder.append("&destination=");
+        stringBuilder.append(destination.latitude);
+        stringBuilder.append(',');
+        stringBuilder.append(destination.longitude);
 
         // travel
-        stringBuffer.append("&mode=");
-        stringBuffer.append(travelMode.getValue());
+        stringBuilder.append("&mode=");
+        stringBuilder.append(travelMode.getValue());
 
         // waypoints
         if (waypoints.size() > 2) {
-            stringBuffer.append("&waypoints=");
+            stringBuilder.append("&waypoints=");
             if(optimize)
-                stringBuffer.append("optimize:true|");
+                stringBuilder.append("optimize:true|");
             for (int i = 1; i < waypoints.size() - 1; i++) {
                 final LatLng p = waypoints.get(i);
-                stringBuffer.append("via:"); // we don't want to parse the resulting JSON for 'legs'.
-                stringBuffer.append(p.latitude);
-                stringBuffer.append(",");
-                stringBuffer.append(p.longitude);
-                stringBuffer.append("|");
+                stringBuilder.append("via:"); // we don't want to parse the resulting JSON for 'legs'.
+                stringBuilder.append(p.latitude);
+                stringBuilder.append(",");
+                stringBuilder.append(p.longitude);
+                stringBuilder.append("|");
             }
         }
 
         // avoid
         if (avoidKinds > 0) {
-            stringBuffer.append("&avoid=");
-            stringBuffer.append(AvoidKind.getRequestParam(avoidKinds));
+            stringBuilder.append("&avoid=");
+            stringBuilder.append(AvoidKind.getRequestParam(avoidKinds));
         }
 
-        if (alternativeRoutes == true) {
-            stringBuffer.append("&alternatives=true");
+        if (alternativeRoutes) {
+            stringBuilder.append("&alternatives=true");
         }
 
         // sensor
-        stringBuffer.append("&sensor=true");
+        stringBuilder.append("&sensor=true");
 
         // language
         if (language != null) {
-            stringBuffer.append("&language=").append(language);
+            stringBuilder.append("&language=").append(language);
         }
 
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 
     public static class Builder {
@@ -116,9 +118,7 @@ public class Routing extends AbstractRouting {
 
         public Builder waypoints (LatLng... points) {
             waypoints.clear();
-            for (LatLng p : points) {
-                waypoints.add(p);
-            }
+            Collections.addAll(waypoints, points);
             return this;
         }
 
