@@ -30,7 +30,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
 
         protected String _sValue;
 
-        private TravelMode(String sValue) {
+        TravelMode(String sValue) {
             this._sValue = sValue;
         }
 
@@ -47,7 +47,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
         private final String _sRequestParam;
         private final int _sBitValue;
 
-        private AvoidKind (int bit, String param) {
+        AvoidKind(int bit, String param) {
             this._sBitValue = bit;
             this._sRequestParam = param;
         }
@@ -107,8 +107,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
      * Performs the call to the google maps API to acquire routing data and
      * deserializes it to a format the map can display.
      *
-     * @param
-     * @return
+     * @return an array list containing the routes
      */
     @Override
     protected ArrayList<Route> doInBackground(Void... voids) {
