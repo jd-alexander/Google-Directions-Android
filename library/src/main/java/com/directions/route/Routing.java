@@ -18,6 +18,7 @@ public class Routing extends AbstractRouting {
     private final int avoidKinds;
     private final boolean optimize;
     private final String language;
+    private final String key;
 
     private Routing(Builder builder) {
         super(builder.listener);
@@ -27,6 +28,7 @@ public class Routing extends AbstractRouting {
         this.optimize = builder.optimize;
         this.alternativeRoutes = builder.alternativeRoutes;
         this.language = builder.language;
+        this.key = builder.key;
     }
 
     protected String constructURL () {
@@ -83,6 +85,11 @@ public class Routing extends AbstractRouting {
             stringBuilder.append("&language=").append(language);
         }
 
+        // API key
+        if(key != null) {
+            stringBuilder.append("&key=").append(key);
+        }
+
         return stringBuilder.toString();
     }
 
@@ -95,6 +102,7 @@ public class Routing extends AbstractRouting {
         private RoutingListener listener;
         private boolean optimize;
         private String language;
+        private String key;
 
         public Builder () {
             this.travelMode = TravelMode.DRIVING;
@@ -104,6 +112,7 @@ public class Routing extends AbstractRouting {
             this.listener = null;
             this.optimize = false;
             this.language = null;
+            this.key = null;
         }
 
         public Builder travelMode (TravelMode travelMode) {
@@ -141,6 +150,11 @@ public class Routing extends AbstractRouting {
 
         public Builder language (String language) {
             this.language = language;
+            return this;
+        }
+
+        public Builder key(String key) {
+            this.key = key;
             return this;
         }
 
