@@ -5,10 +5,10 @@ apply plugin: "com.jfrog.bintray"
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.google.android.gms:play-services-maps:7.5.0'
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
 }
 // This is the library version used when deploying the artifact
-version = "1.0.8"
+version = "1.0.9"
 
 android {
     compileSdkVersion 22
