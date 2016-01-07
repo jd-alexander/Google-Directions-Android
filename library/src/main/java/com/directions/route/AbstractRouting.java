@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Route>> {
     protected ArrayList<RoutingListener> _aListeners;
 
-    protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
+    protected static final String DIRECTIONS_API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
     public enum TravelMode {
         BIKING("bicycling"),
