@@ -8,7 +8,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:7.5.0'
 }
 // This is the library version used when deploying the artifact
-version = "1.0.7"
+version = "1.0.8"
 
 android {
     compileSdkVersion 22
@@ -66,8 +66,8 @@ install {
 }
 
 
-/*
-Only necessary to push to bintray. Causes Travis CI builds to fail.
+
+//Only necessary to push to bintray. Causes Travis CI builds to fail.
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -106,4 +106,3 @@ bintray {
 
 }
 
-*/

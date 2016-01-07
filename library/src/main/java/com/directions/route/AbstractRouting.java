@@ -23,7 +23,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
     protected static final String DIRECTIONS_API_URL = "http://maps.googleapis.com/maps/api/directions/json?";
 
     public enum TravelMode {
-        BIKING("biking"),
+        BIKING("bicycling"),
         DRIVING("driving"),
         WALKING("walking"),
         TRANSIT("transit");
