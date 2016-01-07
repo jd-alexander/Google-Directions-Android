@@ -22,12 +22,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.github.jd-alexander</groupId>
   <artifactId>library</artifactId>
-  <version>1.0.8</version>
+  <version>1.0.9</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-    compile 'com.github.jd-alexander:library:1.0.8'
+    compile 'com.github.jd-alexander:library:1.0.9'
 ```
 
 Usage
@@ -46,10 +46,14 @@ To calculate the route you simply instantiate a Routing object and trigger the e
                     .travelMode(/* Travel Mode */)
                     .withListener(/* Listener that delivers routing results.*/)
                     .waypoints(/*waypoints*/)
+                    .key(/*api key for quota management*/)
                     .build();
         routing.execute();
         
 ```
+
+
+
 
 actual code 
 ``` java
@@ -66,15 +70,11 @@ actual code
         
         .....
         
-      @Override
-      public void onRoutingSuccess(PolylineOptions mPolyOptions) 
-      {
-        PolylineOptions polyoptions = new PolylineOptions();
-        polyoptions.color(Color.BLUE);
-        polyoptions.width(10);
-        polyoptions.addAll(mPolyOptions.getPoints());
-        map.addPolyline(polyoptions);
-      }
+       @Override
+    public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex)
+    {
+       //code to add route to map here. See sample app for more details.
+    }
 ```
 
 
