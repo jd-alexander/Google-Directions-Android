@@ -54,7 +54,6 @@ To calculate the route you simply instantiate a Routing object and trigger the e
 
 
 
-
 actual code 
 ``` java
         start = new LatLng(18.015365, -77.499382);
