@@ -20,7 +20,7 @@ public class GoogleParser extends XMLParser implements Parser {
      * Distance covered. *
      */
     private int distance;
-    
+
     /* Status code returned when the request succeeded */
     private String OK = "OK";
 
