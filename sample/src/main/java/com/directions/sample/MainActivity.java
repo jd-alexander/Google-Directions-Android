@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.directions.route.AbstractRouting;
 import com.directions.route.Route;
+import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
 import com.google.android.gms.common.ConnectionResult;
@@ -40,7 +41,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -362,10 +362,13 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
 
     @Override
-    public void onRoutingFailure() {
+    public void onRoutingFailure(RouteException e) {
         // The Routing request failed
         progressDialog.dismiss();
-        Toast.makeText(this,"Something went wrong, Try again", Toast.LENGTH_SHORT).show();
+        if(e != null)
+            Toast.makeText(this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this,"Something went wrong, Try again", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -89,7 +89,6 @@ public class Routing extends AbstractRouting {
         if(key != null) {
             stringBuilder.append("&key=").append(key);
         }
-
         return stringBuilder.toString();
     }
 

@@ -3,7 +3,7 @@ package com.directions.route;
 import java.util.ArrayList;
 
 public interface RoutingListener {
-    void onRoutingFailure();
+    void onRoutingFailure(RouteException e);
 
     void onRoutingStart();
 
