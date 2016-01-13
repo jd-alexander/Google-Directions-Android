@@ -23,13 +23,10 @@ public class RouteException extends Exception {
             return;
         }else{
             try {
-                Log.d(TAG,"json: "+json.toString());
-                Log.d(TAG,"Before accessing key: "+KEY_STATUS);
                 statusCode = json.getString(KEY_STATUS);
-                Log.d(TAG,"Before accessing key: "+KEY_MESSAGE);
                 message = json.getString(KEY_MESSAGE);
             } catch (JSONException e) {
-                Log.d(TAG, "JSONException. Msg: "+e.getMessage());
+                Log.e(TAG, "JSONException while parsing RouteException argument. Msg: " + e.getMessage());
             }
         }
     }
