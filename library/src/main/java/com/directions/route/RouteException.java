@@ -21,13 +21,12 @@ public class RouteException extends Exception {
             statusCode = "";
             message = "Parsing error";
             return;
-        }else{
-            try {
-                statusCode = json.getString(KEY_STATUS);
-                message = json.getString(KEY_MESSAGE);
-            } catch (JSONException e) {
-                Log.e(TAG, "JSONException while parsing RouteException argument. Msg: " + e.getMessage());
-            }
+        }
+        try {
+            statusCode = json.getString(KEY_STATUS);
+            message = json.getString(KEY_MESSAGE);
+        } catch (JSONException e) {
+            Log.e(TAG, "JSONException while parsing RouteException argument. Msg: " + e.getMessage());
         }
     }
 

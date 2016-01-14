@@ -114,7 +114,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
      */
     @Override
     protected ArrayList<Route> doInBackground(Void... voids) {
-        ArrayList<Route> result = null;
+        ArrayList<Route> result = new ArrayList<Route>();
         try {
             result = new GoogleParser(constructURL()).parse();
         }catch(RouteException e){
@@ -132,9 +132,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
 
     @Override
     protected void onPostExecute(ArrayList<Route> result) {
-        if(mException != null){
-            dispatchOnFailure(mException);
-        } else if (result != null) {
+        if (!result.isEmpty()) {
             int shortestRouteIndex = 0;
             int minDistance = Integer.MAX_VALUE;
 
@@ -154,6 +152,8 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
                 result.get(i).setPolyOptions(mOptions);
             }
             dispatchOnSuccess(result, shortestRouteIndex);
+        } else {
+            dispatchOnFailure(mException);
         }
     }//end onPostExecute method
 
