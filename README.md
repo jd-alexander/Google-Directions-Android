@@ -22,12 +22,12 @@ Grab via Maven:
 <dependency>
   <groupId>com.github.jd-alexander</groupId>
   <artifactId>library</artifactId>
-  <version>1.0.9</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-    compile 'com.github.jd-alexander:library:1.0.9'
+    compile 'com.github.jd-alexander:library:1.1.0'
 ```
 
 Usage
