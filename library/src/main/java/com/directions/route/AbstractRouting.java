@@ -22,6 +22,9 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
 
     protected static final String DIRECTIONS_API_URL = "https://maps.googleapis.com/maps/api/directions/json?";
 
+    /* Private member variable that will hold the RouteException instance created in the background thread */
+    private RouteException mException = null;
+
     public enum TravelMode {
         BIKING("bicycling"),
         DRIVING("driving"),
@@ -85,9 +88,9 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
         }
     }
 
-    protected void dispatchOnFailure() {
+    protected void dispatchOnFailure(RouteException exception) {
         for (RoutingListener mListener : _aListeners) {
-            mListener.onRoutingFailure();
+            mListener.onRoutingFailure(exception);
         }
     }
 
@@ -111,7 +114,13 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
      */
     @Override
     protected ArrayList<Route> doInBackground(Void... voids) {
-        return new GoogleParser(constructURL()).parse();
+        ArrayList<Route> result = new ArrayList<Route>();
+        try {
+            result = new GoogleParser(constructURL()).parse();
+        }catch(RouteException e){
+            mException = e;
+        }
+        return result;
     }
 
     protected abstract String constructURL();
@@ -123,9 +132,7 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
 
     @Override
     protected void onPostExecute(ArrayList<Route> result) {
-        if (result == null) {
-            dispatchOnFailure();
-        } else {
+        if (!result.isEmpty()) {
             int shortestRouteIndex = 0;
             int minDistance = Integer.MAX_VALUE;
 
@@ -145,6 +152,8 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
                 result.get(i).setPolyOptions(mOptions);
             }
             dispatchOnSuccess(result, shortestRouteIndex);
+        } else {
+            dispatchOnFailure(mException);
         }
     }//end onPostExecute method
 

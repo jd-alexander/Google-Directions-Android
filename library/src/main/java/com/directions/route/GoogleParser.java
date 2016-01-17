@@ -21,6 +21,9 @@ public class GoogleParser extends XMLParser implements Parser {
      */
     private int distance;
 
+    /* Status code returned when the request succeeded */
+    private String OK = "OK";
+
     public GoogleParser(String feedUrl) {
         super(feedUrl);
     }
@@ -31,17 +34,23 @@ public class GoogleParser extends XMLParser implements Parser {
      * @return a Route object based on the JSON object by Haseem Saheed
      */
 
-    public ArrayList<Route> parse() {
+    public ArrayList<Route> parse() throws RouteException {
         ArrayList<Route> routes = new ArrayList<>();
 
         // turn the stream into a string
         final String result = convertStreamToString(this.getInputStream());
-        if (result == null) return null;
+        if (result == null) {
+            throw new RouteException("Result is null");
+        }
 
         try {
             //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
             //Get the route object
+
+            if(!json.getString("status").equals(OK)){
+                throw new RouteException(json);
+            }
 
             JSONArray jsonRoutes = json.getJSONArray("routes");
 
@@ -110,10 +119,8 @@ public class GoogleParser extends XMLParser implements Parser {
             }
 
         } catch (JSONException e) {
-            Log.e("Routing Error", e.getMessage());
-            return null;
+            throw new RouteException("JSONException. Msg: "+e.getMessage());
         }
-
         return routes;
     }
 
