@@ -22,7 +22,7 @@ public class GoogleParser extends XMLParser implements Parser {
     private int distance;
 
     /* Status code returned when the request succeeded */
-    private String OK = "OK";
+    private static final String OK = "OK";
 
     public GoogleParser(String feedUrl) {
         super(feedUrl);
