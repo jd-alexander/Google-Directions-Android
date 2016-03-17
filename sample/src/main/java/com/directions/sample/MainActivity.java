@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     AutoCompleteTextView destination;
     @InjectView(R.id.send)
     ImageView send;
-    private String LOG_TAG = "MyActivity";
+    private static final String LOG_TAG = "MyActivity";
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
     private ArrayList<Polyline> polylines;
-    private int[] colors = new int[]{R.color.primary_dark,R.color.primary,R.color.primary_light,R.color.accent,R.color.primary_dark_material_light};
+    private static final int[] COLORS = new int[]{R.color.primary_dark,R.color.primary,R.color.primary_light,R.color.accent,R.color.primary_dark_material_light};
 
 
     private static final LatLngBounds BOUNDS_JAMAICA= new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
@@ -398,10 +398,10 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         for (int i = 0; i <route.size(); i++) {
 
             //In case of more than 5 alternative routes
-            int colorIndex = i % colors.length;
+            int colorIndex = i % COLORS.length;
 
             PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(colors[colorIndex]));
+            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
             polyOptions.width(10 + i * 3);
             polyOptions.addAll(route.get(i).getPoints());
             Polyline polyline = map.addPolyline(polyOptions);
