@@ -10,8 +10,8 @@ import org.json.JSONObject;
  */
 public class RouteException extends Exception {
     private static final String TAG = "RouteException";
-    private final String KEY_STATUS = "status";
-    private final String KEY_MESSAGE = "error_message";
+    private static final String KEY_STATUS = "status";
+    private static final String KEY_MESSAGE = "error_message";
 
     private String statusCode;
     private String message;

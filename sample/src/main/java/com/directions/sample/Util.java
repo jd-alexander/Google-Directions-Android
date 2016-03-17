@@ -7,9 +7,11 @@ import android.net.NetworkInfo;
 /**
  * Created by Joel on 30/06/2015.
  */
-public class Util {
-    static public class Operations {
-
+public final class Util {
+    public static final class Operations {
+        private Operations() throws InstantiationException {
+            throw new InstantiationException("This class is not for instantiation");
+        }
         /**
          * Checks to see if the device is online before carrying out any operations.
          *
@@ -24,5 +26,8 @@ public class Util {
             }
             return false;
         }
+    }
+    private Util() throws InstantiationException {
+        throw new InstantiationException("This class is not for instantiation");
     }
 }
