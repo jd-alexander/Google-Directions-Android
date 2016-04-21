@@ -60,14 +60,13 @@ public abstract class AbstractRouting extends AsyncTask<Void, Void, ArrayList<Ro
         }
 
         protected static String getRequestParam (int bit) {
-            String ret = "";
+            StringBuilder ret = new StringBuilder();
             for (AvoidKind kind : AvoidKind.values()) {
                 if ((bit & kind._sBitValue) == kind._sBitValue) {
-                    ret += kind._sRequestParam;
-                    ret += "|";
+                    ret.append(kind._sRequestParam).append('|');
                 }
             }
-            return ret;
+            return ret.toString();
         }
     }
 
