@@ -20,6 +20,9 @@ public class Segment {
      * Distance covered. *
      */
     private double distance;
+    
+    /* Maneuver instructions */
+    private String maneuver;
 
     /**
      * Create an empty segment.
@@ -82,6 +85,7 @@ public class Segment {
         copy.instruction = instruction;
         copy.length = length;
         copy.distance = distance;
+        copy.maneuver = maneuver;
         return copy;
     }
 
@@ -113,4 +117,11 @@ public class Segment {
         return distance;
     }
 
+    public void setManeuver(String man) {
+        maneuver = man;
+    }
+    
+    public String getManeuver() {
+        return maneuver;
+    }
 }
