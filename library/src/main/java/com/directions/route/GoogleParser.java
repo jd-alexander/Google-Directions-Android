@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GoogleParser extends XMLParser implements Parser {
+
+    private static final String VALUE = "value";
+    private static final String DISTANCE = "distance";
     /**
      * Distance covered. *
      */
@@ -34,8 +37,8 @@ public class GoogleParser extends XMLParser implements Parser {
      * @return a Route object based on the JSON object by Haseem Saheed
      */
 
-    public ArrayList<Route> parse() throws RouteException {
-        ArrayList<Route> routes = new ArrayList<>();
+    public final List<Route> parse() throws RouteException {
+        List<Route> routes = new ArrayList<>();
 
         // turn the stream into a string
         final String result = convertStreamToString(this.getInputStream());
@@ -79,12 +82,12 @@ public class GoogleParser extends XMLParser implements Parser {
                 route.setCopyright(jsonRoute.getString("copyrights"));
                 //Get distance and time estimation
                 route.setDurationText(leg.getJSONObject("duration").getString("text"));
-                route.setDurationValue(leg.getJSONObject("duration").getInt("value"));
-                route.setDistanceText(leg.getJSONObject("distance").getString("text"));
-                route.setDistanceValue(leg.getJSONObject("distance").getInt("value"));
+                route.setDurationValue(leg.getJSONObject("duration").getInt(VALUE));
+                route.setDistanceText(leg.getJSONObject(DISTANCE).getString("text"));
+                route.setDistanceValue(leg.getJSONObject(DISTANCE).getInt(VALUE));
                 route.setEndAddressText(leg.getString("end_address"));
                 //Get the total length of the route.
-                route.setLength(leg.getJSONObject("distance").getInt("value"));
+                route.setLength(leg.getJSONObject(DISTANCE).getInt(VALUE));
                 //Get any warnings provided (tos requirement)
                 if (!jsonRoute.getJSONArray("warnings").isNull(0)) {
                     route.setWarning(jsonRoute.getJSONArray("warnings").getString(0));
@@ -103,7 +106,7 @@ public class GoogleParser extends XMLParser implements Parser {
                             start.getDouble("lng"));
                     segment.setPoint(position);
                     //Set the length of this segment in metres
-                    final int length = step.getJSONObject("distance").getInt("value");
+                    final int length = step.getJSONObject(DISTANCE).getInt(VALUE);
                     distance += length;
                     segment.setLength(length);
                     segment.setDistance((double)distance / (double)1000);
