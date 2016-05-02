@@ -60,9 +60,9 @@ public class Routing extends AbstractRouting {
                 final LatLng p = waypoints.get(i);
                 stringBuilder.append("via:"); // we don't want to parse the resulting JSON for 'legs'.
                 stringBuilder.append(p.latitude);
-                stringBuilder.append(",");
+                stringBuilder.append(',');
                 stringBuilder.append(p.longitude);
-                stringBuilder.append("|");
+                stringBuilder.append('|');
             }
         }
 
