@@ -1,11 +1,14 @@
 package com.directions.sample;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @InjectView(R.id.send)
     ImageView send;
     private static final String LOG_TAG = "MyActivity";
+    private static final int ACCESS_FINE_LOCATION_REQUEST_CODE = 0;
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
@@ -121,14 +125,17 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER, 5000, 0,
-                getLocationListener());
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION_REQUEST_CODE);
+        } else {
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 5000, 0,
+                    getLocationListener());
 
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                3000, 0, getLocationListener());
-
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    3000, 0, getLocationListener());
+        }
 
 
         /*
@@ -295,10 +302,6 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         {
             route();
         }
-        else
-        {
-            Toast.makeText(this,"No internet connectivity",Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void route()
@@ -311,20 +314,12 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                 {
                     starting.setError("Choose location from dropdown.");
                 }
-                else
-                {
-                    Toast.makeText(this,"Please choose a starting point.",Toast.LENGTH_SHORT).show();
-                }
             }
             if(end==null)
             {
                 if(destination.getText().length()>0)
                 {
                     destination.setError("Choose location from dropdown.");
-                }
-                else
-                {
-                    Toast.makeText(this,"Please choose a destination.",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -424,5 +419,21 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @Override
     public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == ACCESS_FINE_LOCATION_REQUEST_CODE) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 0, getLocationListener());
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, getLocationListener());
+            } else {
+                Toast.makeText(this, "ACCESS_FINE_LOCATION Permission Denied", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }
