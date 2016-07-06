@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -122,61 +123,11 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
         locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER, 5000, 0,
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-
-                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-                        map.moveCamera(center);
-                        map.animateCamera(zoom);
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                });
+                getLocationListener());
 
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                3000, 0, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
-                        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-                        map.moveCamera(center);
-                        map.animateCamera(zoom);
-
-                    }
-
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onProviderEnabled(String provider) {
-
-                    }
-
-                    @Override
-                    public void onProviderDisabled(String provider) {
-
-                    }
-                });
+                3000, 0, getLocationListener());
 
 
 
@@ -305,6 +256,36 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             }
         });
 
+    }
+
+    @NonNull
+    private LocationListener getLocationListener() {
+        return new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude()));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
+
+                map.moveCamera(center);
+                map.animateCamera(zoom);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
     }
 
     @OnClick(R.id.send)
