@@ -35,3 +35,7 @@ build
 
 # gradle
 .gradle
+sample/gradlew
+sample/gradlew.bat
+sample/gradle/wrapper/gradle-wrapper.jar
+sample/gradle/wrapper/gradle-wrapper.properties
