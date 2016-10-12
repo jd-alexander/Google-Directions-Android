@@ -201,7 +201,7 @@ public class PlaceAutoCompleteAdapter
                 AutocompletePrediction prediction = iterator.next();
                 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getPrimaryText(new StyleSpan(Typeface.BOLD)).toString() + " " +
+                        prediction.getPrimaryText(new StyleSpan(Typeface.BOLD)).toString() + ", " +
                         prediction.getSecondaryText(new StyleSpan(Typeface.BOLD))));
             }
 

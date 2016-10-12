@@ -2,16 +2,26 @@ package com.directions.sample;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -55,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     private static final int PERMISSIONS_REQUEST_ENABLE_LOCATION = 121;
     private static final long UPDATE_INTERVAL = 5000;
     private static final long FASTEST_INTERVAL = 3000;
-    protected GoogleMap map;
+    @Nullable protected GoogleMap map;
     protected LatLng start;
     protected LatLng end;
     @InjectView(R.id.start)
@@ -64,12 +74,16 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     AutoCompleteTextView destination;
     @InjectView(R.id.send)
     ImageView send;
+    @InjectView(R.id.cardview)
+    CardView cardView;
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
     private static final String LOG_TAG = "MyActivity";
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
-    private List<Polyline> polylines;
-    private static final int[] COLORS = new int[]{R.color.primary_dark, R.color.primary, R.color.primary_light, R.color.accent, R.color.primary_dark_material_light};
+    private List<Pair<Polyline, Route>> routesLines;
+    //private static final int[] COLORS = new int[]{R.color.primary_dark, R.color.primary, R.color.primary_light, R.color.accent, R.color.primary_dark_material_light};
 
 
     //    private static final LatLngBounds BOUNDS_JAMAICA = new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
@@ -88,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        polylines = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(LocationServices.API)
@@ -149,8 +163,10 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                         }
                         // Get the Place object from the buffer.
                         final Place place = places.get(0);
-
                         start = place.getLatLng();
+                        starting.clearFocus();
+                        InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        in.hideSoftInputFromWindow(starting.getWindowToken(), 0);
                     }
                 });
 
@@ -181,8 +197,10 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                         }
                         // Get the Place object from the buffer.
                         final Place place = places.get(0);
-
                         end = place.getLatLng();
+                        destination.clearFocus();
+                        InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        in.hideSoftInputFromWindow(destination.getWindowToken(), 0);
                     }
                 });
 
@@ -237,9 +255,28 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.action_directions) {
+            cardView.setVisibility(View.VISIBLE);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.send)
     public void sendRequest() {
         if (Util.Operations.isOnline(this)) {
+            if (map!=null) {
+                map.clear();
+            }
             route();
         } else {
             Toast.makeText(this, "No internet connectivity", Toast.LENGTH_SHORT).show();
@@ -293,35 +330,54 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     }
 
     @Override
-    public void onRoutingSuccess(List<Route> route, int shortestRouteIndex) {
+    public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
         progressDialog.dismiss();
-        CameraUpdate center = CameraUpdateFactory.newLatLng(start);
-        CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-        map.moveCamera(center);
-
-
-        if (polylines.size() > 0) {
-            for (Polyline poly : polylines) {
-                poly.remove();
-            }
+        final double southLatitude, northernLatitude;
+        final double eastLongitude, westLongitude;
+        if (start.latitude<end.latitude) {
+            southLatitude = start.latitude;
+            northernLatitude = end.latitude;
         }
+        else {
+            southLatitude = end.latitude;
+            northernLatitude = start.latitude;
+        }
+        if (start.longitude<end.longitude) {
+            eastLongitude = start.longitude;
+            westLongitude = end.longitude;
+        }
+        else {
+            eastLongitude = end.longitude;
+            westLongitude = start.longitude;
+        }
+        map.clear();
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(new LatLngBounds(
+            new LatLng(southLatitude, eastLongitude),
+            new LatLng(northernLatitude, westLongitude)), 0));
 
-        polylines = new ArrayList<>();
+        routesLines = null;
+        routesLines = new ArrayList<>();
+
         //add route(s) to the map.
-        for (int i = 0; i < route.size(); i++) {
-
-            //In case of more than 5 alternative routes
-            int colorIndex = i % COLORS.length;
-
+        for (int i = 0; i < routes.size(); i++) {
             PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(route.get(i).getPoints());
+            if (i==0) {
+                polyOptions.color(getResources().getColor(R.color.primary_dark));
+            }
+            else {
+                polyOptions.color(getResources().getColor(android.R.color.darker_gray));
+            }
+            polyOptions.width(20 - i * 2);
+            polyOptions.zIndex(100-i);
+            polyOptions.addAll(routes.get(i).getPoints());
             Polyline polyline = map.addPolyline(polyOptions);
-            polylines.add(polyline);
+            polyline.setClickable(true);
+            final Route route = routes.get(i);
+            routesLines.add(new Pair(polyline, route));
 
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " +
+                    route.getDistanceValue() + ": duration - " +
+                    route.getDurationValue(), Toast.LENGTH_SHORT).show();
         }
 
         // Start marker
@@ -335,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         options.position(end);
         options.icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green));
         map.addMarker(options);
-
+        cardView.setVisibility(View.GONE);
     }
 
     @Override
@@ -352,7 +408,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ENABLE_LOCATION);
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ENABLE_LOCATION);
             return;
         }
 
@@ -390,12 +448,25 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             }
         });
 
-
-        //CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(18.013610, -77.498803));
-        //CameraUpdate zoom = CameraUpdateFactory.zoomTo(16);
-
-        //map.moveCamera(center);
-        //map.animateCamera(zoom);
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+                if (routesLines!=null) {
+                    for (Pair<Polyline, Route> p: routesLines) {
+                        if (p.first.equals(polyline)) {
+                            Route r = p.second;
+                            String txt = "Distance: " + r.getDistanceText() +
+                                    "\nDuration: " + r.getDurationText();
+                            if (!TextUtils.isEmpty(r.getWarning())) {
+                                txt += "\nWarning: " + r.getWarning();
+                            }
+                            Toast.makeText(MainActivity.this, txt, Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
