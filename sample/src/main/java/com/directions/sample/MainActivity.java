@@ -3,16 +3,17 @@ package com.directions.sample;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.util.Pair;
@@ -22,7 +23,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -42,6 +43,7 @@ import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
 import com.directions.route.RoutingListener;
+import com.directions.route.Segment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -66,7 +68,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     private static final String START_PLACE_KEY = "START_PLACE_KEY";
     private static final String END_PLACE_KEY = "END_PLACE_KEY";
     private static final String TAG = "MainActivity";
+    private static MainActivity instance;
     @Nullable
     protected GoogleMap map;
     protected static Place startPlace, endPlace;
@@ -96,17 +98,24 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     Toolbar toolbar;
     @InjectView(R.id.spinner)
     Spinner spinner;
+    @InjectView(R.id.btnTurnByTurnNav)
+    FloatingActionButton btnTurnByTurnNav;
     private static final String LOG_TAG = "MyActivity";
     protected GoogleApiClient mGoogleApiClient;
     private PlaceAutoCompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+    @Nullable
+    public List<Pair<Polyline, Route>> getRoutesLines() {
+        return routesLines;
+    }
+
     private List<Pair<Polyline, Route>> routesLines;
-    Pair<Polyline, Route> selectedRoute;
-    //private static final int[] COLORS = new int[]{R.color.primary_dark, R.color.primary, R.color.primary_light, R.color.accent, R.color.primary_dark_material_light};
 
-
-    //    private static final LatLngBounds BOUNDS_JAMAICA = new LatLngBounds(new LatLng(-57.965341647205726, 144.9987719580531),
-//            new LatLng(72.77492067739843, -9.998857788741589));
     private static final LatLngBounds BOUNDS_WORLD = new LatLngBounds(new LatLng(-85, -180),
             new LatLng(85, 180));
 
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
@@ -167,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
                 final PlaceAutoCompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
                 final String placeId = String.valueOf(item.placeId);
-                Log.i(LOG_TAG, "Autocomplete item selected: " + item.description);
+                Logger.getLogger().i(LOG_TAG, "Autocomplete item selected: " + item.description);
 
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
@@ -180,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                     public void onResult(PlaceBuffer places) {
                         if (!places.getStatus().isSuccess()) {
                             // Request did not complete successfully
-                            Log.e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                            Logger.getLogger().e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
                             places.release();
                             return;
                         }
@@ -200,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
                 final PlaceAutoCompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
                 final String placeId = String.valueOf(item.placeId);
-                Log.i(LOG_TAG, "Autocomplete item selected: " + item.description);
+                Logger.getLogger().i(LOG_TAG, "Autocomplete item selected: " + item.description);
 
               /*
               Issue a request to the Places Geo Data API to retrieve a Place object with additional
@@ -213,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                     public void onResult(PlaceBuffer places) {
                         if (!places.getStatus().isSuccess()) {
                             // Request did not complete successfully
-                            Log.e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+                            Logger.getLogger().e(LOG_TAG, "Place query did not complete. Error: " + places.getStatus().toString());
                             places.release();
                             return;
                         }
@@ -234,13 +244,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 travelMode = AbstractRouting.TravelMode.values()[position];
-                if (map!=null) {
-                    map.clear();
-                }
-                if (routesLines!=null) {
-                    routesLines.clear();
-                }
-                selectedRoute = null;
+                clearObjects();
                 if (startPlace==null || endPlace==null) {
                     cardView.setVisibility(View.VISIBLE);
                 }
@@ -252,8 +256,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-//                map.clear();
-//                cardView.setVisibility(View.VISIBLE);
+//                clearObjects();
             }
         });
 
@@ -301,6 +304,18 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             }
         });
 
+        btnTurnByTurnNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (routesLines!=null && routesLines.size()>0) {
+                    final Route route = routesLines.get(0).second;
+                    Intent i = new Intent(MainActivity.this, TurnByTurnInstructionsActivity.class);
+                    i.putExtra(TurnByTurnInstructionsActivity.TRAVEL_MODE_EXTRA, travelMode);
+                    startActivity(i);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -312,6 +327,9 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_get_directions) {
+            cardView.setVisibility(View.VISIBLE);
+        }
         /*if (item.getItemId() == R.id.action_car_directions) {
             cardView.setVisibility(View.VISIBLE);
             travelMode = AbstractRouting.TravelMode.DRIVING;
@@ -338,9 +356,7 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @OnClick(R.id.send)
     public void sendRequest() {
         if (Util.Operations.isOnline(this)) {
-            if (map != null) {
-                map.clear();
-            }
+            clearObjects();
             route();
         } else {
             Snackbar.make(coordinatorLayout, getString(R.string.noInternet), Snackbar.LENGTH_SHORT).show();
@@ -396,14 +412,12 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
     @Override
     public void onRoutingSuccess(List<Route> routes, int shortestRouteIndex) {
         progressDialog.dismiss();
-
         addRoutesToMap(routes, true);
-
         cardView.setVisibility(View.GONE);
     }
 
     private void addRoutesToMap(List<Route> routes, boolean shouldMoveCamera) {
-        map.clear();
+        clearObjects();
 
         if (shouldMoveCamera) {
             final double southLatitude, northernLatitude;
@@ -452,9 +466,6 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
             final Route route = routes.get(i);
             final Pair<Polyline, Route> routeLine = new Pair(polyline, route);
             routesLines.add(routeLine);
-            if (i == 0) {
-                selectedRoute = routeLine;
-            }
         }
 
         // Start marker
@@ -473,17 +484,19 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
         options.snippet(endPlace.getAddress().toString());
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         map.addMarker(options);
+
+        btnTurnByTurnNav.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onRoutingCancelled() {
-        Log.i(LOG_TAG, "Routing was cancelled.");
+        Logger.getLogger().i(LOG_TAG, "Routing was cancelled.");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-        Log.v(LOG_TAG, connectionResult.toString());
+        Logger.getLogger().v(LOG_TAG, connectionResult.toString());
     }
 
     @Override
@@ -537,37 +550,47 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                     for (Pair<Polyline, Route> p : routesLines) {
                         newRouteLines.add(p.second);
                     }
-
+                    int index = 0;
                     for (Pair<Polyline, Route> p : routesLines) {
                         if (p.first.equals(polyline)) {
-                            Route r = p.second;
-                            String txt = "Distance: " + r.getDistanceText() +
-                                    "\nTime: " + r.getDurationText();
-                            if (!TextUtils.isEmpty(r.getWarning())) {
-                                txt += "\nWarning: " + r.getWarning();
-                            }
+                            //if we clicked on the same route don't do anything.
+                            if (index > 0) {
+                                Route r = p.second;
+                                String txt = "" + r.getDistanceText() +
+                                        "\n" + r.getDurationText();
+                                if (!TextUtils.isEmpty(r.getWarning())) {
+                                    txt += "\nWarning: " + r.getWarning();
+                                }
 
-                            //add selected route at the top of routes.
-                            newRouteLines.remove(r);
-                            newRouteLines.add(0, r);
-                            addRoutesToMap(newRouteLines, false);
-                            Snackbar snackbar = Snackbar.make(coordinatorLayout, txt, Snackbar.LENGTH_LONG);
+                                //add selected route at the top of routes.
+                                newRouteLines.remove(r);
+                                newRouteLines.add(0, r);
+                                addRoutesToMap(newRouteLines, false);
+                                Snackbar snackbar = Snackbar.make(coordinatorLayout, txt, Snackbar.LENGTH_LONG);
 
-                            if ((newRouteLines.size() > 1) && (!polyline.equals(routesLines.get(0).first))) {
-                                snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        final Route oldRoute = newRouteLines.get(1);
-                                        newRouteLines.remove(oldRoute);
-                                        newRouteLines.add(0, oldRoute);
-                                        addRoutesToMap(newRouteLines, false);
-                                    }
-                                });
+                                if ((newRouteLines.size() > 1) && (!polyline.equals(routesLines.get(0).first))) {
+                                    snackbar.setAction(getString(R.string.undo), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            final Route oldRoute = newRouteLines.get(1);
+                                            newRouteLines.remove(oldRoute);
+                                            newRouteLines.add(0, oldRoute);
+                                            addRoutesToMap(newRouteLines, false);
+                                        }
+                                    });
+                                }
+                                snackbar.show();
                             }
-                            snackbar.show();
+                            final Route r = p.second;
+                            for (Segment s : r.getSegments()) {
+                                Logger.getLogger().i(TAG, "I:" + s.getInstruction() +
+                                        "\nM:" + s.getManeuver() +
+                                        "\nD:" + s.getDistance() +
+                                        "\nL:" + s.getLength() + "\n\n");
+                            }
                             break;
-
                         }
+                        index++;
                     }
                 }
             }
@@ -653,5 +676,15 @@ public class MainActivity extends AppCompatActivity implements RoutingListener, 
                 ButterKnife.inject(this, view);
             }
         }
+    }
+
+    private void clearObjects() {
+        if (map!=null) {
+            map.clear();
+        }
+        if (routesLines!=null) {
+            routesLines.clear();
+        }
+        btnTurnByTurnNav.setVisibility(View.GONE);
     }
 }

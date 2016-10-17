@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:titleTextColor="@color/White"
-        android:minHeight="?attr/actionBarSize"
-        appNs:theme="@style/ToolBarStyle"
         android:elevation="4dp"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        appNs:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:titleTextColor="@color/White"
+        appNs:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        appNs:theme="@style/ToolBarStyle">
 
         <Spinner
             android:id="@+id/spinner"
@@ -28,12 +28,12 @@
         android:id="@+id/cardview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
         android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal|bottom"
         android:layout_margin="20dp"
-        appNs:cardElevation="4dp"
         appNs:cardBackgroundColor="@color/transparent_white"
         appNs:cardCornerRadius="8dp"
+        appNs:cardElevation="4dp"
         appNs:cardUseCompatPadding="true"
         appNs:contentPadding="20dp">
 
@@ -58,8 +58,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginRight="50dp"
                     android:layout_marginEnd="50dp"
+                    android:layout_marginRight="50dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/dotted" />
 
@@ -70,26 +70,37 @@
                     android:background="@android:color/transparent"
                     android:hint="Choose a destination..." />
             </LinearLayout>
+
             <ImageView
                 android:id="@+id/send"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_width="36dp"
-                android:src="@drawable/ic_send_grey600_48dp"
-                android:layout_height="36dp" />
+                android:src="@drawable/ic_send_grey600_48dp" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnTurnByTurnNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        appNs:layout_anchor="@+id/map"
+        appNs:layout_anchorGravity="bottom|right"
+        android:src="@drawable/ic_flag_white_32dp"
+        appNs:paddingEnd="6dp"
+        appNs:fabSize="mini"
+        android:visibility="gone"/>
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?android:attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_marginTop="?android:attr/actionBarSize" />
+
 </android.support.design.widget.CoordinatorLayout>
 
