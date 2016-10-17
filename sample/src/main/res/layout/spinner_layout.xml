@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/DarkBlue"
+    android:padding="4dp">
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/toolbar_icon"
+        android:layout_height="@dimen/toolbar_icon"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:src="@drawable/ic_directions_white_48dp"/>
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/White"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:text="Biking"/>
+</LinearLayout>

@@ -3,4 +3,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="directions">Directions</string>
+    <string name="undo">Undo</string>
+    <string name="noInternet">Not connected to Internet</string>
+    <string name="choose_start">Choose start point!</string>
+    <string name="choose_stop">Choose destination!</string>
+    <string name="choose_from_dropdown">Choose from dropdown list!</string>
+    <string name="error">Error</string>
 </resources>

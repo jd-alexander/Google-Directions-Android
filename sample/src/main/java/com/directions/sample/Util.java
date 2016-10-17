@@ -1,8 +1,12 @@
 package com.directions.sample;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.graphics.drawable.DrawableCompat;
 
 /**
  * Created by Joel on 30/06/2015.
@@ -29,5 +33,15 @@ public final class Util {
     }
     private Util() throws InstantiationException {
         throw new InstantiationException("This class is not for instantiation");
+    }
+
+    public static Drawable setTint(Drawable d, int color) {
+        Drawable wrappedDrawable = DrawableCompat.wrap(d);
+        DrawableCompat.setTint(wrappedDrawable, color);
+        return wrappedDrawable;
+    }
+
+    public static Bitmap getBitmapFromDrawable(Drawable drawable) {
+        return ((BitmapDrawable)drawable).getBitmap();
     }
 }

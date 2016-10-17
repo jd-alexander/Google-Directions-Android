@@ -110,9 +110,33 @@
     <color name="WhiteTransparent20">#80E0E0E0</color>
     <color name="WhiteTransparent50">#10E0E0E0</color>
     <color name="BlackTransparent20Perc">#33000000</color>
-    <color name="GrayTransparent20Perc">#40808080</color>
+
+    <color name="GrayTransparent100Perc">#FF808080</color>
+    <color name="GrayTransparent92Perc">#E0808080</color>
+    <color name="GrayTransparent85Perc">#D0808080</color>
+    <color name="GrayTransparent80Perc">#C0808080</color>
+    <color name="GrayTransparent72Perc">#B0808080</color>
+    <color name="GrayTransparent65Perc">#A0808080</color>
+    <color name="GrayTransparent55Perc">#90808080</color>
     <color name="GrayTransparent50Perc">#80808080</color>
-    <color name="GrayTransparent10Perc">#10808080</color>
+    <color name="GrayTransparent42Perc">#70808080</color>
+    <color name="GrayTransparent35Perc">#60808080</color>
+    <color name="GrayTransparent28Perc">#50808080</color>
+    <color name="GrayTransparent22Perc">#40808080</color>
+    <color name="GrayTransparent17Perc">#30808080</color>
+    <color name="GrayTransparent12Perc">#20808080</color>
+    <color name="GrayTransparent07Perc">#10808080</color>
+
+    <array name="GrayShades">
+        <item>@color/GrayTransparent100Perc</item>
+        <item>@color/GrayTransparent80Perc</item>
+        <item>@color/GrayTransparent65Perc</item>
+        <item>@color/GrayTransparent50Perc</item>
+        <item>@color/GrayTransparent42Perc</item>
+    </array>
+
+
+
     <color name="Olive">#808000</color>
     <color name="Purple">#800080</color>
     <color name="Maroon">#800000</color>
