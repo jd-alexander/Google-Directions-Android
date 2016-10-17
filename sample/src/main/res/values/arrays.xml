@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="travel_mode_imgs">
+        <item>@drawable/ic_directions_bike_white_48dp</item>
+        <item>@drawable/ic_directions_car_white_48dp</item>
+        <item>@drawable/ic_directions_walk_white_48dp</item>
+        <item>@drawable/ic_directions_bus_white_48dp</item>
+    </array>
+
+</resources>

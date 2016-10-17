@@ -202,5 +202,25 @@ public class Route {
         this.latLgnBounds = builder.build();
     }
 
+    @Override
+    public String toString() {
+        return "Route{" +
+                "name='" + name + '\'' +
+                ", points=" + points +
+                ", segments=" + segments +
+                ", copyright='" + copyright + '\'' +
+                ", warning='" + warning + '\'' +
+                ", country='" + country + '\'' +
+                ", latLgnBounds=" + latLgnBounds +
+                ", length=" + length +
+                ", polyline='" + polyline + '\'' +
+                ", durationText='" + durationText + '\'' +
+                ", durationValue=" + durationValue +
+                ", distanceText='" + distanceText + '\'' +
+                ", distanceValue=" + distanceValue +
+                ", endAddressText='" + endAddressText + '\'' +
+                ", polyOptions=" + polyOptions +
+                '}';
+    }
 }
 
