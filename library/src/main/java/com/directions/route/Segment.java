@@ -1,9 +1,12 @@
 package com.directions.route;
 //by Haseem Saheed
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
-public class Segment {
+public class Segment implements Parcelable {
     /**
      * Points in this segment. *
      */
@@ -20,7 +23,7 @@ public class Segment {
      * Distance covered. *
      */
     private double distance;
-    
+
     /* Maneuver instructions */
     private String maneuver;
 
@@ -31,6 +34,13 @@ public class Segment {
     public Segment() {
     }
 
+    private Segment(Parcel in) {
+        start = in.readParcelable(LatLng.class.getClassLoader());
+        instruction = in.readString();
+        length = in.readInt();
+        distance = in.readDouble();
+        maneuver = in.readString();
+    }
 
     /**
      * Set the turn instruction.
@@ -120,8 +130,34 @@ public class Segment {
     public void setManeuver(String man) {
         maneuver = man;
     }
-    
+
     public String getManeuver() {
         return maneuver;
     }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(start, flags);
+        dest.writeString(instruction);
+        dest.writeInt(length);
+        dest.writeDouble(distance);
+        dest.writeString(maneuver);
+    }
+
+    public static final Parcelable.Creator<Segment> CREATOR = new Parcelable.Creator<Segment>() {
+        @Override
+        public Segment createFromParcel(Parcel in) {
+            return new Segment(in);
+        }
+
+        @Override
+        public Segment[] newArray(int size) {
+            return new Segment[size];
+        }
+    };
 }
