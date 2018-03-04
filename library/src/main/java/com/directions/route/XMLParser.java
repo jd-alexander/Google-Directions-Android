@@ -27,7 +27,7 @@ public class XMLParser {
         try {
             return feedUrl.openConnection().getInputStream();
         } catch (IOException e) {
-            Log.e("Routing Error", e.getMessage());
+            Log.e("Routing Error", "Exception: " + e.getMessage());
             return null;
         }
     }
