@@ -86,6 +86,9 @@ public class GoogleParser extends XMLParser implements Parser {
                 route.setDistanceText(leg.getJSONObject(DISTANCE).getString("text"));
                 route.setDistanceValue(leg.getJSONObject(DISTANCE).getInt(VALUE));
                 route.setEndAddressText(leg.getString("end_address"));
+                //Get Traffic based Duration
+                route.setDurationInTrafficText(leg.getJSONObject("duration_in_traffic").getString("text"));
+                route.setDurationInTrafficValue(leg.getJSONObject("duration_in_traffic").getLong(VALUE));
                 //Get the total length of the route.
                 route.setLength(leg.getJSONObject(DISTANCE).getInt(VALUE));
                 //Get any warnings provided (tos requirement)
