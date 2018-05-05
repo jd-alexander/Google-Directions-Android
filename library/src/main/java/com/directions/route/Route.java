@@ -27,6 +27,12 @@ public class Route implements Parcelable {
     private int distanceValue;
     private String endAddressText;
     private PolylineOptions polyOptions;
+    private long durationInTrafficValue;
+    private String durationInTrafficText;
+
+
+
+
 
     public Route() {
         points = new ArrayList<>();
@@ -60,6 +66,8 @@ public class Route implements Parcelable {
         polyline = in.readString();
         durationText = in.readString();
         durationValue = in.readInt();
+        durationInTrafficText = in.readString();
+        durationInTrafficValue = in.readLong();
         distanceText = in.readString();
         distanceValue = in.readInt();
         endAddressText = in.readString();
@@ -229,11 +237,28 @@ public class Route implements Parcelable {
         return latLgnBounds;
     }
 
+
     public void setLatLgnBounds(LatLng northeast, LatLng southwest) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(northeast);
         builder.include(southwest);
         this.latLgnBounds = builder.build();
+    }
+
+    public Long getDurationInTrafficValue() {
+        return durationInTrafficValue;
+    }
+
+    public void setDurationInTrafficValue(Long durationInTrafficValue) {
+        this.durationInTrafficValue = durationInTrafficValue;
+    }
+
+    public String getDurationInTrafficText() {
+        return durationInTrafficText;
+    }
+
+    public void setDurationInTrafficText(String durationInTrafficText) {
+        this.durationInTrafficText = durationInTrafficText;
     }
 
     @Override
@@ -269,6 +294,8 @@ public class Route implements Parcelable {
         dest.writeString(polyline);
         dest.writeString(durationText);
         dest.writeInt(durationValue);
+        dest.writeString(durationInTrafficText);
+        dest.writeLong(durationInTrafficValue);
         dest.writeString(distanceText);
         dest.writeInt(distanceValue);
         dest.writeString(endAddressText);
