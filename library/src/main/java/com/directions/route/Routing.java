@@ -79,6 +79,10 @@ public class Routing extends AbstractRouting {
         // sensor
         stringBuilder.append("&sensor=true");
 
+        //traffic
+        stringBuilder.append("&departure_time=now");
+        stringBuilder.append("&traffic_model=best_guess");
+
         // language
         if (language != null) {
             stringBuilder.append("&language=").append(language);
