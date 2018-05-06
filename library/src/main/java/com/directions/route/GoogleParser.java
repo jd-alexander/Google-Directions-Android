@@ -49,6 +49,7 @@ public class GoogleParser extends XMLParser implements Parser {
         try {
             //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
+            Log.d("directionsResponse" , result);
             //Get the route object
 
             if(!json.getString("status").equals(OK)){
